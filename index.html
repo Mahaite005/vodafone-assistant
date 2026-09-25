@@ -1513,9 +1513,22 @@ function initAuth(){
   }
   function hideGate(){ gate.style.display = 'none'; }
 
-  function showChip(name){
+  function showChip(name, isAdmin){
     document.getElementById('userName').textContent = name;
-    document.getElementById('userChip').style.display = 'block';
+    const chip = document.getElementById('userChip');
+    chip.style.display = 'block';
+    let btn = document.getElementById('approveBtn');
+    if(isAdmin && !btn){
+      btn = document.createElement('button');
+      btn.id = 'approveBtn';
+      btn.type = 'button';
+      btn.textContent = '👥 approvals / الموافقات';
+      btn.title = 'Open user approvals (Supabase profiles table)';
+      btn.style.cssText = 'margin-left:.5rem;border:1px solid #e60000;background:#e60000;color:#fff;border-radius:999px;padding:.25rem .7rem;font-size:.75rem;cursor:pointer;font-family:inherit;font-weight:700';
+      btn.addEventListener('click', () => window.open('https://supabase.com/dashboard/project/dxxbanoazrhspsmwyuhg/editor', '_blank'));
+      chip.appendChild(btn);
+    }
+    if(btn) btn.style.display = isAdmin ? '' : 'none';
   }
   function hideChip(){ document.getElementById('userChip').style.display = 'none'; }
 
@@ -1564,8 +1577,10 @@ function initAuth(){
       return;
     }
     const p = r.profile;
+    const feats = p.features || [];
+    const isAdmin = feats.includes('admin');
     if(p.status === 'approved'){
-      hideGate(); showChip(p.username); applyFeatures(p.features);
+      hideGate(); showChip(p.username, isAdmin); applyFeatures(isAdmin ? [] : feats);
     } else if(p.status === 'rejected'){
       hideChip();
       showStatus('⛔', 'Access rejected / تم الرفض', 'Your account (' + p.username + ') was rejected by the admin. Contact them for details. / حسابك اترفض من المسؤول. تواصل معاه للتفاصيل.');
