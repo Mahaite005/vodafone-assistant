@@ -1,9 +1,0 @@
-{
-  "name": "vodafone-assistant",
-  "private": true,
-  "version": "1.0.0",
-  "description": "Vodafone Egypt call-center assistant (static site + access-control API)",
-  "dependencies": {
-    "@vercel/kv": "^1.0.0"
-  }
-}

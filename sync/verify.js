@@ -114,29 +114,11 @@ const nb2 = 70 / 0.70; ok(nb2 === 100, 'Paid 70÷0.7 = 100 (got ' + nb2 + ')');
 const nb3 = 50 * 0.70; ok(nb3 === 35, 'Net 50×0.7 = 35 (got ' + nb3 + ')');
 const nb4 = 35 / 0.70; ok(nb4 === 50, 'Paid 35÷0.7 = 50 (got ' + nb4 + ')');
 
-// 10. Access control (Vercel KV code flow)
-ok(fs.existsSync(path.join(ROOT, 'package.json')), 'package.json exists');
-ok(fs.existsSync(path.join(ROOT, 'api', 'request-access.js')), 'api/request-access.js exists');
-ok(fs.existsSync(path.join(ROOT, 'api', 'check-access.js')), 'api/check-access.js exists');
-ok(fs.existsSync(path.join(ROOT, 'api', 'admin-pending.js')), 'api/admin-pending.js exists');
-ok(fs.existsSync(path.join(ROOT, 'api', 'admin-approve.js')), 'api/admin-approve.js exists');
-ok(fs.existsSync(path.join(ROOT, 'api', 'health.js')), 'api/health.js exists');
-ok(fs.existsSync(path.join(ROOT, 'request-access.html')), 'request-access.html exists');
-ok(fs.existsSync(path.join(ROOT, 'admin.html')), 'admin.html exists');
-ok(/ACCESS GATE/.test(html) && /request-access\.html/.test(html), 'index.html access gate present');
-ok(/ADMIN_SECRET/.test(fs.readFileSync(path.join(ROOT, 'api', 'admin-approve.js'), 'utf8')), 'admin endpoints require ADMIN_SECRET');
-
-// code format: 6 chars, no confusing 0/O/1/I/L
-const crypto = require('crypto');
-const CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-let codeOk = true;
-for (let i = 0; i < 20; i++) {
-  const b = crypto.randomBytes(6);
-  let s = '';
-  for (let k = 0; k < 6; k++) s += CHARS[b[k] % CHARS.length];
-  if (!/^[A-Z2-9]{6}$/.test(s) || /[01IL0]/.test(s)) codeOk = false;
-}
-ok(codeOk, 'access code format valid (6 chars, unambiguous)');
+// 10. Access control removed — site is public (no gate, api/, or access pages)
+ok(!fs.existsSync(path.join(ROOT, 'api')), 'api/ removed');
+ok(!fs.existsSync(path.join(ROOT, 'request-access.html')), 'request-access.html removed');
+ok(!fs.existsSync(path.join(ROOT, 'admin.html')), 'admin.html removed');
+ok(!/ACCESS GATE/.test(html), 'no access gate in index.html');
 
 // 11. Offers / discount calculator
 ok(html.indexOf('data-tab="offers"') !== -1, 'Offers tab present');

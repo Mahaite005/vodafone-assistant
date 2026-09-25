@@ -136,22 +136,6 @@ footer .ar{display:block; color:#a8a29e}
 </style>
 </head>
 <body>
-<script>
-/* ============ ACCESS GATE ============
-   Redirects to request-access.html unless this device holds an approved code.
-   Skipped for local file:// use (offline) and if the check API is unreachable. */
-(function(){
-  try{
-    if(location.protocol === 'file:') return;
-    var t = null;
-    try{ t = localStorage.getItem('vf_access_token'); }catch(e){ return; }
-    if(!t){ location.replace('/request-access.html'); return; }
-    fetch('/api/check-access?token=' + encodeURIComponent(t)).then(function(r){ return r.json(); }).then(function(d){
-      if(!d || !d.allowed){ try{ location.replace('/request-access.html'); }catch(e){} }
-    }).catch(function(){});
-  }catch(e){}
-})();
-</script>
 
 <header>
   <div class="hw">
