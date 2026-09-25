@@ -154,6 +154,8 @@ ok(!svcFound, 'no service_role JWT anywhere in repo files');
 ok(/supabase-js@2/.test(html), 'supabase-js CDN loaded');
 ok(/id="authGate"/.test(html) && /id="authUser"/.test(html) && /id="userChip"/.test(html), 'auth overlay + user chip present');
 ok(/function initAuth/.test(html) && /onAuthStateChange/.test(html), 'auth module with session handling present');
+ok(/authBoot\(\)/.test(html) && /unpkg\.com\/@supabase\/supabase-js/.test(html), 'auth isolated block with CDN fallback present');
+ok(/Auth library failed to load/.test(html), 'auth visible error state present (never silent)');
 ok(/status === 'approved'/.test(html) && /applyFeatures/.test(html), 'approval gate + per-feature filtering present');
 
 // 11. Offers / discount calculator
