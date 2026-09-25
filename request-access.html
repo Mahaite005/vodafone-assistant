@@ -38,15 +38,17 @@ const KEY = 'vf_access_token';
 async function ensureCode(){
   let t = localStorage.getItem(KEY);
   if(t){ document.getElementById('code').textContent = t; return t; }
+  const st = document.getElementById('status');
   try{
     const r = await fetch('/api/request-access', {method:'POST'});
-    const d = await r.json();
+    let d = {};
+    try{ d = await r.json(); }catch(e){}
     if(d.code){ localStorage.setItem(KEY, d.code); document.getElementById('code').textContent = d.code; return d.code; }
-    document.getElementById('status').textContent = 'Could not issue code. Try again later.';
-    document.getElementById('status').className = 'status err';
+    st.textContent = 'Could not issue code. ' + (d.error || ('Server HTTP ' + r.status + ' — KV database may not be connected to this project.'));
+    st.className = 'status err';
   }catch(e){
-    document.getElementById('status').textContent = 'Network error. Try again later.';
-    document.getElementById('status').className = 'status err';
+    st.textContent = 'Network error. Try again later.';
+    st.className = 'status err';
   }
   return null;
 }

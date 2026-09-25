@@ -120,6 +120,7 @@ ok(fs.existsSync(path.join(ROOT, 'api', 'request-access.js')), 'api/request-acce
 ok(fs.existsSync(path.join(ROOT, 'api', 'check-access.js')), 'api/check-access.js exists');
 ok(fs.existsSync(path.join(ROOT, 'api', 'admin-pending.js')), 'api/admin-pending.js exists');
 ok(fs.existsSync(path.join(ROOT, 'api', 'admin-approve.js')), 'api/admin-approve.js exists');
+ok(fs.existsSync(path.join(ROOT, 'api', 'health.js')), 'api/health.js exists');
 ok(fs.existsSync(path.join(ROOT, 'request-access.html')), 'request-access.html exists');
 ok(fs.existsSync(path.join(ROOT, 'admin.html')), 'admin.html exists');
 ok(/ACCESS GATE/.test(html) && /request-access\.html/.test(html), 'index.html access gate present');
