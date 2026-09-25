@@ -159,6 +159,7 @@ ok(/Auth library failed to load/.test(html), 'auth visible error state present (
 ok(/status === 'approved'/.test(html) && /applyFeatures/.test(html), 'approval gate + per-feature filtering present');
 ok(/approveBtn/.test(html) && /supabase\.com\/dashboard\/project\//.test(html), 'admin approvals shortcut present');
 ok(/includes\('admin'\)/.test(html), 'admin flag handling present');
+ok(/isMissingTable/.test(html) && /Setup incomplete/.test(html), 'missing-table setup message present');
 
 // 11. Offers / discount calculator
 ok(html.indexOf('data-tab="offers"') !== -1, 'Offers tab present');

@@ -1551,17 +1551,24 @@ function initAuth(){
   }
 
   async function ensureProfile(user){
-    const sel = await sb.from('profiles').select('username,status,features').eq('id', user.id).maybeSingle();
-    if(sel.data) return { profile: sel.data };
-    const metaName = user.user_metadata && user.user_metadata.username;
-    const fallback = (user.email || 'user').split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_').slice(0, 20) || 'user';
-    const username = metaName || fallback;
-    const ins = await sb.from('profiles').insert({id: user.id, username, status: 'pending', features: []});
-    if(ins.error){
-      if(ins.error.code === '23505') return { taken: true };
-      return { error: ins.error.message };
-    }
-    return { profile: { username, status: 'pending', features: [] } };
+    try{
+      const sel = await sb.from('profiles').select('username,status,features').eq('id', user.id).maybeSingle();
+      if(sel.error) return { error: sel.error.message || 'select failed' };
+      if(sel.data) return { profile: sel.data };
+      const metaName = user.user_metadata && user.user_metadata.username;
+      const fallback = (user.email || 'user').split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_').slice(0, 20) || 'user';
+      const username = metaName || fallback;
+      const ins = await sb.from('profiles').insert({id: user.id, username, status: 'pending', features: []});
+      if(ins.error){
+        if(ins.error.code === '23505') return { taken: true };
+        return { error: ins.error.message || 'insert failed' };
+      }
+      return { profile: { username, status: 'pending', features: [] } };
+    }catch(e){ return { error: 'Network error — try again. / مشكلة شبكة — حاول تاني.' }; }
+  }
+
+  function isMissingTable(msg){
+    return /profil|relation|schema cache|not found|table|PGRST|42P01|404/i.test(String(msg || ''));
   }
 
   async function render(user){
@@ -1573,7 +1580,11 @@ function initAuth(){
       return;
     }
     if(r.error){
-      showStatus('⚠️', 'Profile error / خطأ', r.error);
+      if(isMissingTable(r.error)){
+        showStatus('⚙️', 'Setup incomplete / الإعداد غير مكتمل', 'The admin must create the profiles table once: Supabase → SQL Editor → run the setup SQL, then log in again. / لازم المسؤول ينشئ جدول profiles مرة واحدة: Supabase ← SQL Editor ← نفّذ كود الإعداد، وبعدين سجّل الدخول تاني.');
+      } else {
+        showStatus('⚠️', 'Profile error / خطأ', r.error);
+      }
       return;
     }
     const p = r.profile;
