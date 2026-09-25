@@ -595,6 +595,7 @@ footer .ar{display:block; color:#a8a29e}
       <div class="rhead">Offer result / نتيجة العرض</div>
       <div class="rrow"><div class="lbl">Original monthly price <span class="ar">السعر الشهري الأصلي</span></div><div class="val" id="offOrig">—</div></div>
       <div class="rrow"><div class="lbl">Discount <span class="ar">نسبة الخصم</span></div><div class="val" id="offRate">—</div></div>
+      <div class="rrow"><div class="lbl">Monthly deduction <span class="ar">مبلغ الخصم الشهري</span></div><div class="val" id="offDeduct">—</div></div>
       <div class="rrow total"><div class="lbl">Discounted monthly price <span class="ar">السعر الشهري بعد الخصم</span></div><div class="val" id="offMonthly">—</div></div>
       <div class="rrow"><div class="lbl">Duration <span class="ar">المدة</span></div><div class="val" id="offDur">—</div></div>
       <div class="rrow grand"><div class="lbl"><b>Total for the period</b> <span class="ar">الإجمالي للمدة كلها</span></div><div class="val" id="offTotal">—</div></div>
@@ -1238,6 +1239,7 @@ function calcOffer(){
   const rate = (parseFloat(offDisc.value) || 25) / 100;
 
   const monthly = Math.round(price * (1 - rate) * 100) / 100;
+  const deduct = Math.round(price * rate * 100) / 100;
   const total = Math.round(monthly * months * 100) / 100;
   const save = Math.round((price * months - total) * 100) / 100;
   const arNum = n => Number(n).toLocaleString('ar-EG');
@@ -1247,6 +1249,8 @@ function calcOffer(){
     fmt(price) + ' <span class="ar" style="' + AR + '">' + arNum(price) + ' جنيه</span>';
   document.getElementById('offRate').innerHTML =
     Math.round(rate * 100) + '% <span class="ar" style="' + AR + '">خصم ' + arNum(Math.round(rate * 100)) + '٪</span>';
+  document.getElementById('offDeduct').innerHTML =
+    fmt(deduct) + ' <span class="ar" style="' + AR + '">' + arNum(deduct) + ' جنيه شهريًا</span>';
   document.getElementById('offMonthly').innerHTML =
     fmt(monthly) + ' <span class="ar" style="' + AR + '">' + arNum(monthly) + ' جنيه شهريًا</span>';
   document.getElementById('offDur').innerHTML =
