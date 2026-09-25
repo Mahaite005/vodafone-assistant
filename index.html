@@ -180,6 +180,7 @@ footer .ar{display:block; color:#a8a29e}
   <button class="tab" data-tab="pro">⏳ Pro-Rata <span class="ar" style="font-size:.8rem">حاسبة الباقة الجزئية</span></button>
   <button class="tab" data-tab="netbalance">💰 Net Balance <span class="ar" style="font-size:.8rem">الرصيد الصافي</span></button>
   <button class="tab" data-tab="billvalidity">📅 Bill Validity <span class="ar" style="font-size:.8rem">صلاحية الفاتورة</span></button>
+  <button class="tab" data-tab="offers">🎁 Offers <span class="ar" style="font-size:.8rem">العروض والخصومات</span></button>
 </nav>
 
 <main>
@@ -576,6 +577,44 @@ footer .ar{display:block; color:#a8a29e}
         <div class="lbl">Note <span class="ar">ملاحظة</span></div>
         <div class="val" id="bvMsg" style="color:#fca5a5"></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="offers">
+  <div class="tool">
+    <h2>🎁 Package Offers & Discounts <span class="ar">عروض وخصومات الباقات</span></h2>
+    <p class="desc">Enter the current package price, pick a duration (1 month up to 1.5 years) and a discount (25% or 50%) — the discounted price for the whole period appears instantly.
+      <span class="ar" style="display:block;margin-top:.3rem">اكتب سعر الباقة الحالي، واختار المدة (من شهر لحد سنة ونص) ونسبة الخصم (٢٥٪ أو ٥٠٪) — السعر بعد الخصم للمدة كلها بيظهر فوراً.</span></p>
+
+    <div class="triowrap">
+      <div class="field">
+        <label for="offPrice">Package price (EGP) / سعر الباقة</label>
+        <input id="offPrice" type="number" min="0" step="0.01" placeholder="e.g. 100">
+        <div class="hint">Current monthly price / السعر الشهري الحالي</div>
+      </div>
+      <div class="field">
+        <label for="offMonths">Duration / المدة</label>
+        <select id="offMonths"></select>
+        <div class="hint">1 month → 18 months (1.5 years) / من شهر لسنة ونص</div>
+      </div>
+      <div class="field">
+        <label for="offDisc">Discount / الخصم</label>
+        <select id="offDisc">
+          <option value="25">25% / خصم ٢٥٪</option>
+          <option value="50">50% / خصم ٥٠٪</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result" id="offResult">
+      <div class="rhead">Offer result / نتيجة العرض</div>
+      <div class="rrow"><div class="lbl">Original monthly price <span class="ar">السعر الشهري الأصلي</span></div><div class="val" id="offOrig">—</div></div>
+      <div class="rrow"><div class="lbl">Discount <span class="ar">نسبة الخصم</span></div><div class="val" id="offRate">—</div></div>
+      <div class="rrow total"><div class="lbl">Discounted monthly price <span class="ar">السعر الشهري بعد الخصم</span></div><div class="val" id="offMonthly">—</div></div>
+      <div class="rrow"><div class="lbl">Duration <span class="ar">المدة</span></div><div class="val" id="offDur">—</div></div>
+      <div class="rrow grand"><div class="lbl"><b>Total for the period</b> <span class="ar">الإجمالي للمدة كلها</span></div><div class="val" id="offTotal">—</div></div>
+      <div class="rrow"><div class="lbl">You save <span class="ar">إجمالي التوفير</span></div><div class="val" id="offSave" style="color:#86efac">—</div></div>
     </div>
   </div>
 </section>
@@ -1180,6 +1219,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+/* ============ OFFERS / DISCOUNT CALCULATOR ============
+   Discounted monthly = price × (1 − rate); period total = monthly × months.
+   Duration: 1–18 months. Discount: 25% or 50%. */
+const offPrice = document.getElementById('offPrice');
+const offMonths = document.getElementById('offMonths');
+const offDisc = document.getElementById('offDisc');
+const offResult = document.getElementById('offResult');
+
+function offMonthWord(m){
+  if(m === 1) return '1 month';
+  return m + ' months';
+}
+function offMonthWordAr(m){
+  if(m === 1) return 'شهر واحد';
+  if(m === 2) return 'شهران';
+  if(m <= 10) return m.toLocaleString('ar-EG') + ' شهور';
+  return m.toLocaleString('ar-EG') + ' شهرًا';
+}
+(function offFillMonths(){
+  let h = '';
+  for(let m = 1; m <= 18; m++){
+    h += '<option value="' + m + '"' + (m === 1 ? ' selected' : '') + '>' + offMonthWord(m) + ' / ' + offMonthWordAr(m) + '</option>';
+  }
+  offMonths.innerHTML = h;
+})();
+
+function calcOffer(){
+  const price = parseFloat(offPrice.value);
+  offResult.classList.remove('show');
+  if(isNaN(price) || price < 0) return;
+  const months = parseInt(offMonths.value, 10) || 1;
+  const rate = (parseFloat(offDisc.value) || 25) / 100;
+
+  const monthly = Math.round(price * (1 - rate) * 100) / 100;
+  const total = Math.round(monthly * months * 100) / 100;
+  const save = Math.round((price * months - total) * 100) / 100;
+  const arNum = n => Number(n).toLocaleString('ar-EG');
+  const AR = 'font-size:.78rem; font-weight:400; color:#d6d3d1';
+
+  document.getElementById('offOrig').innerHTML =
+    fmt(price) + ' <span class="ar" style="' + AR + '">' + arNum(price) + ' جنيه</span>';
+  document.getElementById('offRate').innerHTML =
+    Math.round(rate * 100) + '% <span class="ar" style="' + AR + '">خصم ' + arNum(Math.round(rate * 100)) + '٪</span>';
+  document.getElementById('offMonthly').innerHTML =
+    fmt(monthly) + ' <span class="ar" style="' + AR + '">' + arNum(monthly) + ' جنيه شهريًا</span>';
+  document.getElementById('offDur').innerHTML =
+    offMonthWord(months) + ' <span class="ar" style="' + AR + '">' + offMonthWordAr(months) + '</span>';
+  document.getElementById('offTotal').innerHTML =
+    fmt(total) + ' <span class="ar" style="' + AR + '">' + arNum(total) + ' جنيه</span>';
+  document.getElementById('offSave').innerHTML =
+    fmt(save) + ' <span class="ar" style="' + AR + '">' + arNum(save) + ' جنيه توفير</span>';
+
+  offResult.classList.add('show');
+}
+offPrice.addEventListener('input', calcOffer);
+offMonths.addEventListener('change', calcOffer);
+offDisc.addEventListener('change', calcOffer);
 
 /* ============ FAQ RENDER ============ */
 const faqList = document.getElementById('faqList');

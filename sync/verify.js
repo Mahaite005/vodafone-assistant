@@ -137,5 +137,28 @@ for (let i = 0; i < 20; i++) {
 }
 ok(codeOk, 'access code format valid (6 chars, unambiguous)');
 
+// 11. Offers / discount calculator
+ok(html.indexOf('data-tab="offers"') !== -1, 'Offers tab present');
+ok(html.indexOf('id="offers"') !== -1, 'Offers section present');
+ok(/id="offPrice"/.test(html) && /id="offMonths"/.test(html) && /id="offDisc"/.test(html) && /id="offResult"/.test(html), 'Offers inputs + result present');
+ok(/<option value="50">50%/.test(html), 'Offers 25%/50% discount options present');
+ok(/function calcOffer/.test(html), 'calcOffer function present');
+ok(/for\(let m = 1; m <= 18; m\+\+\)/.test(html), 'Offers duration 1–18 months');
+
+// offers math: monthly = price×(1−rate); total = monthly×months; save = price×months − total
+function offerMath(price, ratePct, months){
+  const rate = ratePct / 100;
+  const monthly = Math.round(price * (1 - rate) * 100) / 100;
+  const total = Math.round(monthly * months * 100) / 100;
+  const save = Math.round((price * months - total) * 100) / 100;
+  return { monthly, total, save };
+}
+let o = offerMath(100, 25, 6);
+ok(o.monthly === 75 && o.total === 450 && o.save === 150, 'Offers 100 EGP × 6mo × 25%: 75/mo, 450 total, 150 save (got ' + o.monthly + '/' + o.total + '/' + o.save + ')');
+o = offerMath(200, 50, 18);
+ok(o.monthly === 100 && o.total === 1800 && o.save === 1800, 'Offers 200 EGP × 18mo × 50%: 100/mo, 1800 total, 1800 save (got ' + o.monthly + '/' + o.total + '/' + o.save + ')');
+o = offerMath(52, 50, 1);
+ok(o.monthly === 26 && o.total === 26 && o.save === 26, 'Offers 52 EGP × 1mo × 50%: 26/mo, 26 total, 26 save (got ' + o.monthly + '/' + o.total + '/' + o.save + ')');
+
 console.log('\n' + (fails ? fails + ' FAILURES' : 'ALL CHECKS PASSED ✓'));
 process.exit(fails ? 1 : 0);
