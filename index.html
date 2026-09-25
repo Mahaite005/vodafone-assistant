@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vodafone Egypt Assistant — Codes, Bundles, Tax & Data Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vf:#e60000; --vf-dark:#b30000; --bg:#f6f7fb; --card:#ffffff;
+  --ink:#141414; --muted:#6b7280; --line:#e5e7eb; --ok:#0a7d34; --gold:#b8860b;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Cairo',system-ui,sans-serif; background:var(--bg); color:var(--ink); min-height:100vh}
+.ar{font-family:'Cairo',sans-serif; direction:rtl; unicode-bidi:isolate}
+
+header{background:linear-gradient(135deg,var(--vf) 0%,#8f0000 100%); color:#fff; padding:2rem 1.2rem 1.4rem; position:relative; overflow:hidden}
+header::after{content:""; position:absolute; right:-80px; top:-80px; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,.08)}
+header::before{content:""; position:absolute; left:-60px; bottom:-120px; width:240px; height:240px; border-radius:50%; background:rgba(255,255,255,.06)}
+.hw{max-width:1200px; margin:0 auto; position:relative; z-index:1}
+.brand{display:flex; align-items:center; gap:.8rem; margin-bottom:.4rem}
+.logo{width:44px; height:44px; background:#fff; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--vf); font-size:1.2rem; box-shadow:0 4px 14px rgba(0,0,0,.25)}
+h1{font-size:1.65rem; font-weight:700; letter-spacing:-.02em}
+.tag{font-size:.92rem; opacity:.92; font-weight:300}
+.stats{display:flex; gap:1.5rem; margin-top:.9rem; flex-wrap:wrap}
+.stat{display:flex; flex-direction:column}
+.stat b{font-size:1.15rem}
+.stat span{font-size:.75rem; opacity:.85}
+
+nav{max-width:1200px; margin:1.2rem auto 0; padding:0 1rem; display:flex; gap:.5rem; flex-wrap:wrap; position:sticky; top:0; z-index:50; background:var(--bg); padding-top:.8rem; padding-bottom:.8rem}
+.tab{border:1px solid var(--line); background:var(--card); padding:.6rem 1.1rem; border-radius:999px; cursor:pointer; font-weight:600; font-size:.9rem; color:var(--muted); transition:all .2s; font-family:inherit}
+.tab:hover{border-color:var(--vf); color:var(--vf)}
+.tab.active{background:var(--vf); color:#fff; border-color:var(--vf); box-shadow:0 4px 12px rgba(230,0,0,.25)}
+
+main{max-width:1200px; margin:0 auto; padding:1rem 1rem 3rem}
+section{display:none; animation:fade .25s ease}
+section.active{display:block}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+.searchwrap{position:sticky; top:0; z-index:40; background:var(--bg); padding:.6rem 0 .9rem}
+.searchbox{display:flex; gap:.6rem; align-items:center; background:var(--card); border:2px solid var(--line); border-radius:14px; padding:.7rem 1rem; transition:border-color .2s, box-shadow .2s}
+.searchbox:focus-within{border-color:var(--vf); box-shadow:0 6px 20px rgba(230,0,0,.12)}
+.searchbox svg{width:20px; height:20px; stroke:var(--muted); flex:none}
+#searchInput, #faqSearch{flex:1; border:none; outline:none; font-size:1.05rem; font-family:inherit; background:transparent; color:var(--ink)}
+#searchInput::placeholder, #faqSearch::placeholder{color:#9ca3af}
+.count{font-size:.8rem; color:var(--muted); white-space:nowrap}
+
+.chips{display:flex; gap:.45rem; flex-wrap:wrap; margin:.3rem 0 .9rem}
+.chip{border:1.5px solid var(--line); background:var(--card); border-radius:999px; padding:.32rem .85rem; font-size:.8rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all .15s; font-family:inherit}
+.chip:hover{border-color:var(--vf); color:var(--vf)}
+.chip.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:.9rem}
+.card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1rem 1.1rem; transition:box-shadow .2s, transform .2s; border-left:4px solid var(--vf)}
+.card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08); transform:translateY(-2px)}
+.card.top{border-left-color:var(--gold)}
+.card .code-row{display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-bottom:.45rem}
+.code{font-family:'Cairo',ui-monospace,monospace; font-weight:700; font-size:1.18rem; color:var(--vf); direction:ltr; word-break:break-all}
+.copy{border:1px solid var(--line); background:#fafafa; border-radius:8px; padding:.3rem .6rem; font-size:.75rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all .15s; font-family:inherit}
+.copy:hover{border-color:var(--vf); color:var(--vf)}
+.copy.done{background:var(--ok); color:#fff; border-color:var(--ok)}
+.en{font-size:.9rem; line-height:1.45; color:#374151}
+.ar-line{font-size:.92rem; line-height:1.7; color:#111; border-top:1px dashed var(--line); margin-top:.55rem; padding-top:.55rem}
+.badge{display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:.18rem .55rem; border-radius:6px; margin-bottom:.5rem}
+.badge.sms{background:#fee2e2; color:#991b1b} .badge.cash{background:#dcfce7; color:#166534}
+.badge.inet{background:#dbeafe; color:#1e40af} .badge.svc{background:#fef3c7; color:#92400e}
+.badge.info{background:#ede9fe; color:#5b21b6} .badge.red{background:#ffe4e6; color:#881337}
+.badge.emg{background:#ffedd5; color:#9a3412} .badge.flex{background:#cffafe; color:#155e75}
+.vtag{display:inline-block; font-size:.65rem; font-weight:700; background:#fef3c7; color:#92400e; padding:.18rem .45rem; border-radius:6px; margin-bottom:.5rem; margin-left:.3rem; direction:ltr}
+
+table{width:100%; border-collapse:collapse; background:var(--card); border-radius:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06); font-size:.92rem}
+th{background:var(--ink); color:#fff; text-align:left; padding:.7rem .9rem; font-weight:600; font-size:.82rem; letter-spacing:.03em}
+th .ar{display:block; font-weight:400; font-size:.92em; opacity:.8}
+td{padding:.65rem .9rem; border-top:1px solid var(--line); vertical-align:top}
+td .ar{display:block; color:#565f6b; font-size:.92em; margin-top:.15rem; line-height:1.7}
+tr:hover td{background:#faf5f5}
+.tblwrap{overflow-x:auto; border-radius:14px; margin:.6rem 0 1.4rem}
+.tbl-title{font-weight:700; font-size:1.05rem; margin:1.4rem 0 .3rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
+.tbl-title .ar{font-weight:600; color:var(--muted); font-size:.95rem}
+.note{font-size:.82rem; color:var(--muted); margin:.4rem 0; line-height:1.8}
+.note .ar{display:block}
+
+.tool{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:1.6rem; max-width:760px; margin:0 auto 1.6rem; box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tool h2{font-size:1.3rem; margin-bottom:.3rem; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap}
+.tool h2 .ar{font-size:1.1rem; color:var(--muted); font-weight:600}
+.tool p.desc{color:var(--muted); font-size:.92rem; margin-bottom:1.1rem; line-height:1.5}
+.field{margin-bottom:1rem}
+.field label{display:block; font-weight:600; font-size:.9rem; margin-bottom:.35rem}
+.field input, .field select{width:100%; padding:.75rem .9rem; border:2px solid var(--line); border-radius:10px; font-size:1.05rem; font-family:inherit; outline:none; transition:border-color .2s; direction:ltr; text-align:left}
+.field input:focus, .field select:focus{border-color:var(--vf)}
+.hint{font-size:.78rem; color:var(--muted); margin-top:.25rem}
+
+.result{background:linear-gradient(135deg,#1c1917,#292524); color:#fff; border-radius:14px; padding:1.2rem 1.3rem; margin-top:1.2rem; display:none}
+.result.show{display:block; animation:fade .3s}
+.rrow{display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px dashed rgba(255,255,255,.15); font-size:.95rem}
+.rrow:last-child{border:none}
+.rrow .lbl{color:#d6d3d1; display:flex; flex-direction:column}
+.rrow .lbl .ar{font-size:.82rem; color:#a8a29e; direction:rtl}
+.rrow .val{font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
+.rrow.total{background:rgba(230,0,0,.18); margin:.5rem -.5rem 0; padding:.8rem .8rem; border-radius:10px; border:none}
+.rrow.total .val{color:#fca5a5; font-size:1.35rem}
+.rrow.grand .val{color:#86efac; font-size:1.5rem}
+.rhead{font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:#a8a29e; margin-bottom:.4rem; font-weight:700}
+
+.dwrap{display:grid; grid-template-columns:1fr 1fr; gap:.9rem; align-items:end; margin-bottom:1.2rem}
+@media(max-width:640px){.dwrap{grid-template-columns:1fr}}
+.dres{background:#faf5f5; border:1px dashed #dca5a5; border-radius:12px; padding:1rem 1.1rem}
+.dl{display:flex; justify-content:space-between; gap:1rem; padding:.35rem 0; font-size:.92rem; font-variant-numeric:tabular-nums}
+.dl b{color:var(--vf)}
+.dl.total{border-top:2px solid var(--vf); margin-top:.5rem; padding-top:.7rem; font-weight:700; font-size:1.05rem}
+
+/* RED pro-rata calculator */
+.pr-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; margin:.6rem 0 .2rem}
+@media(max-width:720px){.pr-grid{grid-template-columns:repeat(2,1fr)}}
+.pr-cell{background:rgba(255,255,255,.07); border:1px dashed rgba(255,255,255,.2); border-radius:12px; padding:.75rem .8rem; text-align:center}
+.pr-lbl{font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:#a8a29e; font-weight:700; margin-bottom:.35rem}
+.pr-lbl .ar{display:block; font-size:.78rem; color:#d6d3d1; text-transform:none; letter-spacing:0; direction:rtl; margin-top:.1rem}
+.pr-val{font-size:1.45rem; font-weight:800; color:#fff; font-variant-numeric:tabular-nums; line-height:1.2; direction:ltr}
+.pr-sub{font-size:.72rem; color:#a8a29e; margin-top:.3rem; direction:ltr; line-height:1.5}
+.pr-sub .ar{color:#d6d3d1}
+
+details{background:var(--card); border:1px solid var(--line); border-radius:12px; margin-bottom:.6rem; overflow:hidden}
+summary{padding:.85rem 1rem; cursor:pointer; font-weight:600; font-size:.95rem; list-style:none; display:flex; align-items:center; gap:.6rem}
+summary::before{content:"+"; color:var(--vf); font-weight:900; font-size:1.1rem; flex:none; transition:transform .2s}
+details[open] summary::before{transform:rotate(45deg)}
+details[open] summary{border-bottom:1px solid var(--line)}
+.faq-body{padding:.9rem 1rem; font-size:.9rem; line-height:1.65; color:#374151; white-space:pre-wrap}
+.faq-cat{font-size:.68rem; background:#f3f4f6; color:var(--muted); padding:.15rem .5rem; border-radius:6px; margin-right:auto; font-weight:600; white-space:nowrap}
+mark{background:#fde047; color:inherit; border-radius:3px; padding:0 2px}
+
+footer{background:var(--ink); color:#d6d3d1; padding:2rem 1rem; text-align:center; font-size:.8rem; line-height:1.8}
+footer .ar{display:block; color:#a8a29e}
+.warn{max-width:1200px; margin:1rem auto 0; padding:.8rem 1.1rem; background:#fffbeb; border:1px solid #fcd34d; border-radius:12px; font-size:.82rem; color:#92400e; line-height:1.6}
+</style>
+</head>
+<body>
+<script>
+/* ============ ACCESS GATE ============
+   Redirects to request-access.html unless this device holds an approved code.
+   Skipped for local file:// use (offline) and if the check API is unreachable. */
+(function(){
+  try{
+    if(location.protocol === 'file:') return;
+    var t = null;
+    try{ t = localStorage.getItem('vf_access_token'); }catch(e){ return; }
+    if(!t){ location.replace('/request-access.html'); return; }
+    fetch('/api/check-access?token=' + encodeURIComponent(t)).then(function(r){ return r.json(); }).then(function(d){
+      if(!d || !d.allowed){ try{ location.replace('/request-access.html'); }catch(e){} }
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
+
+<header>
+  <div class="hw">
+    <div class="brand">
+      <div class="logo">VF</div>
+      <div>
+        <h1>Vodafone Egypt Assistant</h1>
+        <div class="tag">Call-center companion — codes, bundles, FAQs, tax &amp; data tools</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="statCodes">0</b><span>Codes &amp; Numbers / كود ورقم</span></div>
+      <div class="stat"><b id="statFaq">0</b><span>FAQs / سؤال شائع</span></div>
+      <div class="stat"><b id="statTools">3</b><span>Tools / أدوات</span></div>
+      <div class="stat"><b id="statSync" style="color:#86efac">—</b><span>Live sync / مزامنة تلقائية</span></div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab active" data-tab="codes">🔑 Codes <span class="ar" style="font-size:.8rem">الأكواد والأرقام</span></button>
+  <button class="tab" data-tab="plans">📦 Plans <span class="ar" style="font-size:.8rem">الأنظمة والباقات</span></button>
+  <button class="tab" data-tab="faq">❓ FAQ <span class="ar" style="font-size:.8rem">الأسئلة الشائعة</span></button>
+  <button class="tab" data-tab="tax">🧮 Tax <span class="ar" style="font-size:.8rem">حاسبة الضرائب</span></button>
+  <button class="tab" data-tab="data">📊 Data <span class="ar" style="font-size:.8rem">محوّل البيانات</span></button>
+  <button class="tab" data-tab="pro">⏳ Pro-Rata <span class="ar" style="font-size:.8rem">حاسبة الباقة الجزئية</span></button>
+  <button class="tab" data-tab="netbalance">💰 Net Balance <span class="ar" style="font-size:.8rem">الرصيد الصافي</span></button>
+  <button class="tab" data-tab="billvalidity">📅 Bill Validity <span class="ar" style="font-size:.8rem">صلاحية الفاتورة</span></button>
+</nav>
+
+<main>
+
+<section id="codes" class="active">
+  <div class="searchwrap">
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder='Search / ابحث — "كاش", "balance", "888", "*9#" — Arabic digits work too (٥٢)' autocomplete="off">
+      <span class="count" id="resCount"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="grid" id="cardsGrid"></div>
+  <p id="noRes" style="display:none; text-align:center; color:var(--muted); padding:2rem">No results — try another word / لا توجد نتائج — جرّب كلمة أخرى</p>
+</section>
+
+
+<section id="plans">
+
+  <div class="tbl-title">💳 Prepaid Fakka Cards <span class="ar">كروت فكة — كارت الرصيد</span></div>
+  <div class="note">Recharge units: <b>*858*[code]#</b> — control units: <b>*86#</b> — activate from balance: <b>*85#</b>
+    <span class="ar">شحن الوحدات: <b>*858*[كود_الكارت]#</b> — التحكم في الوحدات: <b>*86#</b> — التفعيل من الرصيد: <b>*85#</b></span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Card<br><span class="ar">الكارت</span></th><th>Minutes quota<br><span class="ar">الدقائق</span></th><th>Social MBs<br><span class="ar">ميجابايتس السوشيال</span></th></tr>
+    <tr><td><b>Fakka 2</b> <span class="ar">فكة ٢ جنيه</span><br><code>*9*200#</code></td><td>30 min — all networks<span class="ar">٣٠ دقيقة لكل الشبكات</span></td><td>60 MB<span class="ar">٦٠ ميجا</span></td></tr>
+    <tr><td><b>Fakka 4.25</b> <span class="ar">فكة ٤.٢٥ جنيه</span><br><code>*9*400#</code></td><td>190 min<span class="ar">١٩٠ دقيقة</span></td><td>380 MB<span class="ar">٣٨٠ ميجا</span></td></tr>
+    <tr><td><b>Fakka 6</b> <span class="ar">فكة ٦ جنيه</span><br><code>*9*600#</code></td><td>300 min<span class="ar">٣٠٠ دقيقة</span></td><td>600 MB<span class="ar">٦٠٠ ميجا</span></td></tr>
+    <tr><td><b>Fakka 8</b> <span class="ar">فكة ٨ جنيه</span><br><code>*9*800#</code></td><td>350 min<span class="ar">٣٥٠ دقيقة</span></td><td>700 MB<span class="ar">٧٠٠ ميجا</span></td></tr>
+    <tr><td>Retail cards 5–30 EGP<span class="ar">كروت الشحن من الفروع ٥–٣٠ جنيه</span></td><td colspan="2">Minutes + MBs per card value<span class="ar">دقائق وميجابايتس حسب قيمة الكارت — صالحة لنفس اليوم حتى منتصف الليل</span></td></tr>
+  </table></div>
+
+  <div class="tbl-title">🔀 Flex Plans (Sep 2026) <span class="ar">باقات فليكس الجديدة</span></div>
+  <div class="note">Subscribe / change / renew: <b>*880#</b> — renewal date: <b>*225#</b> — Flex Family: <b>*909#</b> — offers: <b>*365#</b>
+    <span class="ar">الاشتراك / التغيير / التجديد: <b>*880#</b> — ميعاد التجديد: <b>*225#</b> — فليكس عيلة: <b>*909#</b> — العروض: <b>*365#</b> — الأسعار غير شاملة الضريبة</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Bundle<br><span class="ar">الباقة</span></th><th>Monthly price<br><span class="ar">السعر شهرياً</span></th><th>Flexes<br><span class="ar">الفليكسات</span></th><th>+ With subscriptions<br><span class="ar">مع الاشتراكات</span></th></tr>
+    <tr><td><b>Flex 52</b><span class="ar">فليكس ٥٢</span></td><td>52 EGP<span class="ar">٥٢ جنيه</span></td><td>1,500<span class="ar">١٥٠٠ فليكس</span></td><td>1,950<span class="ar">١٩٥٠ فليكس</span></td></tr>
+    <tr><td><b>Flex 80</b><span class="ar">فليكس ٨٠</span></td><td>80 EGP<span class="ar">٨٠ جنيه</span></td><td>3,000<span class="ar">٣٠٠٠ فليكس</span></td><td>3,900 + WATCH IT (with ads)<span class="ar">٣٩٠٠ فليكس + اشتراك واتش إت (بإعلانات)</span></td></tr>
+    <tr><td><b>Flex 115</b><span class="ar">فليكس ١١٥</span></td><td>115 EGP<span class="ar">١١٥ جنيه</span></td><td>5,000<span class="ar">٥٠٠٠ فليكس</span></td><td>6,500 + WATCH IT + Yango + Anghami<span class="ar">٦٥٠٠ فليكس + واتش إت + يانجو + أنغامي بلس</span></td></tr>
+    <tr><td><b>Flex 175</b><span class="ar">فليكس ١٧٥</span></td><td>175 EGP<span class="ar">١٧٥ جنيه</span></td><td>9,000<span class="ar">٩٠٠٠ فليكس</span></td><td>12,350 + same subscriptions<span class="ar">١٢٣٥٠ فليكس + نفس الاشتراكات</span></td></tr>
+    <tr><td><b>Flex 345</b><span class="ar">فليكس ٣٤٥</span></td><td>345 EGP<span class="ar">٣٤٥ جنيه</span></td><td>21,000<span class="ar">٢١ ألف فليكس</span></td><td>27,300 + same subscriptions<span class="ar">٢٧٣٠٠ فليكس + نفس الاشتراكات</span></td></tr>
+  </table></div>
+  <div class="tblwrap"><table>
+    <tr><th>Flex billing rules<br><span class="ar">طريقة محاسبة فليكس</span></th><th>Rate<br><span class="ar">السعر</span></th></tr>
+    <tr><td>1 Flex<span class="ar">فليكس واحد</span></td><td>= 1 min to Vodafone / 1 SMS / 1 MB<span class="ar">= دقيقة فودافون أو رسالة أو ميجابايت</span></td></tr>
+    <tr><td>5 Flexes<span class="ar">٥ فليكسات</span></td><td>= 1 min to other networks<span class="ar">= دقيقة للشبكات الأخرى</span></td></tr>
+    <tr><td>10 Flexes<span class="ar">١٠ فليكسات</span></td><td>= 1 international minute<span class="ar">= دقيقة دولية (يتطلب تفعيل الدولي من التطبيق)</span></td></tr>
+    <tr><td>After bundle ends<span class="ar">بعد انتهاء الباقة</span></td><td>19 piasters unified (min/SMS/MB)<span class="ar">١٩ قرش موحد للدقيقة أو الرسالة أو الميجا</span></td></tr>
+    <tr><td>Validity<span class="ar">الصلاحية</span></td><td>28 days — auto-renew<span class="ar">٢٨ يوم — تجديد تلقائي عند توفر الرصيد</span></td></tr>
+    <tr><td>Renew now, pay later<span class="ar">جدّد دلوقتي وادفع بعدين</span></td><td>Renew with zero balance, pay within 3 days<span class="ar">جدّد بدون رصيد وسدّد خلال ٣ أيام — وإلا تتوقف الباقة حتى السداد</span></td></tr>
+    <tr><td>Rollover conditions<span class="ar">ترحيل الفليكسات المتبقية</span></td><td>Only if renewed on time &amp; not downgrading<span class="ar">يتم الترحيل فقط عند التجديد في الموعد وعدم التحويل لباقة أصغر</span></td></tr>
+  </table></div>
+
+  <div class="tbl-title">🌐 Plus Internet Bundles <span class="ar">باقات بلس للإنترنت</span></div>
+  <div class="note">Subscribe: <b>*00#</b> or <b>*2000#</b> — YouTube <b>*00*1#</b> / TikTok <b>*00*2#</b> / Gaming <b>*00*3#</b> (6.5 EGP each)
+    <span class="ar">الاشتراك: <b>*00#</b> أو <b>*2000#</b> — يوتيوب <b>*00*1#</b> / تيك توك <b>*00*2#</b> / الألعاب <b>*00*3#</b> (٦.٥ جنيه لكل باقة)</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Bundle<br><span class="ar">الباقة</span></th><th>Price<br><span class="ar">السعر</span></th><th>Quota<br><span class="ar">الباقد</span></th></tr>
+    <tr><td>Plus 37<span class="ar">بلس ٣٧</span></td><td>37 EGP<span class="ar">٣٧ جنيه</span></td><td>1,400 MB<span class="ar">١٤٠٠ ميجا</span></td></tr>
+    <tr><td>Plus 69<span class="ar">بلس ٦٩</span></td><td>69 EGP<span class="ar">٦٩ جنيه</span></td><td>3,000 MB<span class="ar">٣٠٠٠ ميجا</span></td></tr>
+    <tr><td>Plus 98<span class="ar">بلس ٩٨</span></td><td>98 EGP<span class="ar">٩٨ جنيه</span></td><td>4,750 MB<span class="ar">٤٧٥٠ ميجا</span></td></tr>
+    <tr><td>Plus 120<span class="ar">بلس ١٢٠</span></td><td>120 EGP<span class="ar">١٢٠ جنيه</span></td><td>6,000 MB<span class="ar">٦٠٠٠ ميجا</span></td></tr>
+    <tr><td>Plus 180<span class="ar">بلس ١٨٠</span></td><td>180 EGP<span class="ar">١٨٠ جنيه</span></td><td>10,000 MB<span class="ar">١٠ جيجا</span></td></tr>
+    <tr><td>Plus 300<span class="ar">بلس ٣٠٠</span></td><td>300 EGP<span class="ar">٣٠٠ جنيه</span></td><td>18,000 MB<span class="ar">١٨ جيجا</span></td></tr>
+    <tr><td>Plus 450<span class="ar">بلس ٤٥٠</span></td><td>450 EGP<span class="ar">٤٥٠ جنيه</span></td><td>29,000 MB<span class="ar">٢٩ جيجا</span></td></tr>
+    <tr><td>Plus 600<span class="ar">بلس ٦٠٠</span></td><td>600 EGP<span class="ar">٦٠٠ جنيه</span></td><td>45,000 MB<span class="ar">٤٥ جيجا</span></td></tr>
+  </table></div>
+  <div class="note">Auto-renews every 28 days (prepaid) • rollover if renewed on time • not available for RED • Plus Apps: 450 MB prepaid / 1,000 MB Flex 25–55 / 2,000 MB Flex 60–100
+    <span class="ar">تتجدد تلقائياً كل ٢٨ يوم (لكارت) • ترحيل المتبقي عند التجديد في الموعد • غير متاحة لعملاء ريد • باقات التطبيقات: ٤٥٠ ميجا لكارت / ١٠٠٠ ميجا لفليكس ٢٥–٥٥ / ٢٠٠٠ ميجا لفليكس ٦٠–١٠٠</span></div>
+
+  <div class="tbl-title">🔴 RED Postpaid (Sep 2026) <span class="ar">أنظمة ريد للفاتورة</span></div>
+  <div class="note">Manage via Ana Vodafone app (More → My Plan) or call <b>888</b>. Prices tax-exclusive — use the Tax tab to compute the final bill.
+    <span class="ar">الإدارة عبر تطبيق أنا فودافون (المزيد ← نظامي) أو بالاتصال بـ <b>888</b>. الأسعار غير شاملة الضريبة — استخدم تبويب حاسبة الضرائب لحساب الفاتورة النهائية.</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Plan<br><span class="ar">النظام</span></th><th>Data<br><span class="ar">النت</span></th><th>Minutes<br><span class="ar">الدقائق</span></th><th>EGP/month<br><span class="ar">شهرياً</span></th><th>Key perks<br><span class="ar">أهم المزايا</span></th></tr>
+    <tr><td><b>RED Essential+</b><span class="ar">ريد إسنشال بلس</span></td><td>16 GB<span class="ar">١٦ جيجا</span></td><td>3,500<span class="ar">٣٥٠٠ دقيقة</span></td><td>575<span class="ar">٥٧٥ جنيه</span></td><td>4 subs, 140GB DSL, 1 family member<span class="ar">٤ اشتراكات، ١٤٠ جيجا DSL، عضو عيلة واحد</span></td></tr>
+    <tr><td><b>RED Advance+</b><span class="ar">ريد أدفانس بلس</span></td><td>32 GB<span class="ar">٣٢ جيجا</span></td><td>6,000<span class="ar">٦٠٠٠ دقيقة</span></td><td>980<span class="ar">٩٨٠ جنيه</span></td><td>5 subs, 2 members, bundle-abroad 1 week<span class="ar">٥ اشتراكات، عضوين، سافر بباقتك أسبوع</span></td></tr>
+    <tr><td><b>RED Prime+</b><span class="ar">ريد برايم بلس</span></td><td>50 GB<span class="ar">٥٠ جيجا</span></td><td>8,000<span class="ar">٨٠٠٠ دقيقة</span></td><td>1,380<span class="ar">١٣٨٠ جنيه</span></td><td>6 subs, 3 members, 2 weeks abroad<span class="ar">٦ اشتراكات، ٣ أعضاء، أسبوعين سفر</span></td></tr>
+    <tr><td><b>RED Elite+</b><span class="ar">ريد إيليت بلس</span></td><td>85 GB<span class="ar">٨٥ جيجا</span></td><td>10,000<span class="ar">١٠٠٠٠ دقيقة</span></td><td>2,000<span class="ar">٢٠٠٠ جنيه</span></td><td>7 subs, 5 members, 3 weeks + roaming mins<span class="ar">٧ اشتراكات، ٥ أعضاء، ٣ أسابيع + دقائق تجوال</span></td></tr>
+    <tr><td><b>RED Exclusive</b><span class="ar">ريد إكسكلوزف</span></td><td>200 GB<span class="ar">٢٠٠ جيجا</span></td><td>11,000<span class="ar">١١٠٠٠ دقيقة</span></td><td>3,450<span class="ar">٣٤٥٠ جنيه</span></td><td>8 subs, 6 members, 600GB DSL, 4 weeks<span class="ar">٨ اشتراكات، ٦ أعضاء، ٦٠٠ جيجا DSL، ٤ أسابيع</span></td></tr>
+  </table></div>
+  <div class="note">Overage after bundle: 19 pt/min, 30 pt/SMS • Subscriptions: Disney+, YouTube Premium, WATCH IT, OSN+, Anghami, Prime, Yango, TOD • Phone installments 15k–60k EGP (20% down) • RED family sharing via app
+    <span class="ar">المحاسبة بعد الباقة: ١٩ قرش/دقيقة و٣٠ قرش/رسالة • الاشتراكات: ديزني+، يوتيوب بريميوم، واتش إت، OSN+، أنغامي، برايم، يانجو، TOD • تقسيط الموبايل ١٥–٦٠ ألف جنيه (مقدم ٢٠٪) • مشاركة العيلة من التطبيق</span></div>
+
+  <div class="tbl-title">🤝 Shokran Services <span class="ar">خدمات شكراً</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Service<br><span class="ar">الخدمة</span></th><th>Code<br><span class="ar">الكود</span></th><th>Fee<br><span class="ar">الرسوم</span></th></tr>
+    <tr><td>Sallefny — borrow credit<span class="ar">سلفني شكراً — استلف رصيد</span></td><td><code>*3#</code></td><td>1 EGP after recharge (get 3 EGP)<span class="ar">جنيه واحد بعد الشحن (تستلم ٣ جنيه)</span></td></tr>
+    <tr><td>Track Sallefny history<span class="ar">متابعة تاريخ السلف</span></td><td><code>*3*5#</code></td><td>Free<span class="ar">مجاناً</span></td></tr>
+    <tr><td>Kallemny — call-me SMS<span class="ar">كلمني شكراً — رسالة اتصل بي</span></td><td><code>*505*[number]#</code></td><td>2 free/day to Vodafone<span class="ar">رسالتان مجاناً يومياً لأرقام فودافون</span></td></tr>
+    <tr><td>Call-me to other networks<span class="ar">اتصل بي للشبكات الأخرى</span></td><td><code>*506*[number]#</code></td><td>—</td></tr>
+    <tr><td>Edfa3ly — receiver pays<span class="ar">ادفعلي شكراً — المستلم يدفع</span></td><td><code>#[number]</code></td><td>10 pt after recharge<span class="ar">١٠ قروش بعد الشحن</span></td></tr>
+    <tr><td>3alnota — call without balance<span class="ar">عالنوتة — اتصل بدون رصيد</span></td><td>dial &amp; confirm<span class="ar">اتصل بالرقم وأكّد</span></td><td>50 pt — up to 3 minutes<span class="ar">٥٠ قرش — حتى ٣ دقائق</span></td></tr>
+    <tr><td>Rennely — missed call without credit<span class="ar">رنّيلي شكراً — رنة بدون رصيد</span></td><td>call the number<span class="ar">اتصل بالرقم المطلوب</span></td><td>10 pt after recharge<span class="ar">١٠ قروش بعد الشحن</span></td></tr>
+    <tr><td>Wasalny — traffic info<span class="ar">وصلني شكراً — حالات الطريق</span></td><td><code>*6#</code></td><td>30 pt<span class="ar">٣٠ قرش</span></td></tr>
+    <tr><td>Track Shokran 2LE charges<span class="ar">متابعة رسوم خدمات شكراً (٢ جنيه)</span></td><td><code>*60*0#</code></td><td>Free<span class="ar">مجاناً</span></td></tr>
+  </table></div>
+
+  <div class="tbl-title">☎️ Short &amp; Fun Numbers <span class="ar">الأرقام القصيرة والترفيهية</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Number<br><span class="ar">الرقم</span></th><th>Service<br><span class="ar">الخدمة</span></th><th>Price/min<br><span class="ar">السعر/دقيقة</span></th></tr>
+    <tr><td><b>2121</b></td><td>Directory assistance — 7 languages, 24/7<span class="ar">خدمة الدليل — ٧ لغات على مدار الساعة</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
+    <tr><td><b>02-140</b></td><td>Daleel directory<span class="ar">دليل ١٤٠</span></td><td>1 LE<span class="ar">جنيه</span></td></tr>
+    <tr><td><b>128</b></td><td>Dakhleya — Interior Ministry<span class="ar">الداخلية</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+    <tr><td><b>2101</b></td><td>Schengen visa appointment<span class="ar">مواعيد فيزا شنغن</span></td><td>5 LE<span class="ar">٥ جنيه</span></td></tr>
+    <tr><td><b>1418</b></td><td>News<span class="ar">أخبار</span></td><td>1 LE<span class="ar">جنيه</span></td></tr>
+    <tr><td><b>858</b></td><td>Recharge IVR<span class="ar">الشحن عبر المكالمة</span></td><td>—</td></tr>
+    <tr><td><b>848</b></td><td>Recharge deadline inquiry<span class="ar">استعلام موعد انتهاء الشحن</span></td><td>—</td></tr>
+    <tr><td><b>868</b></td><td>Balance inquiry IVR<span class="ar">استعلام الرصيد عبر المكالمة</span></td><td>20 pt<span class="ar">٢٠ قرش</span></td></tr>
+    <tr><td><b>5555</b></td><td>Call tone subscribe<span class="ar">الاشتراك في الكول تون</span></td><td>—</td></tr>
+    <tr><td>2222 / 2040 / 1420 / 2330</td><td>Song dedication<span class="ar">إهداء أغاني</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
+    <tr><td>1415 / 2030 / 2220</td><td>Horoscopes<span class="ar">الأبراج</span></td><td>1–1.5 LE<span class="ar">١–١.٥ جنيه</span></td></tr>
+    <tr><td>1427</td><td>Jokes<span class="ar">نكت</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
+    <tr><td>1421</td><td>Cinema<span class="ar">سينما</span></td><td>1 LE<span class="ar">جنيه</span></td></tr>
+    <tr><td>1423 / 1424</td><td>Cuisine / restaurant line<span class="ar">خط المطبخ والمطاعم</span></td><td>1–1.5 LE<span class="ar">١–١.٥ جنيه</span></td></tr>
+    <tr><td>1433</td><td>Islamic line<span class="ar">الخط الإسلامي</span></td><td>1 LE<span class="ar">جنيه</span></td></tr>
+    <tr><td>1477</td><td>Voice messages<span class="ar">الرسائل الصوتية</span></td><td>1 LE<span class="ar">جنيه</span></td></tr>
+    <tr><td>2325 / 2050 / 1490 / 2233 / 2200</td><td>Ring tones<span class="ar">نغمات</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
+    <tr><td>2310 / 1413</td><td>Logos<span class="ar">شعارات ولوجوهات</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
+    <tr><td>16516 / 19155 / 19730</td><td>Yellow Cab<span class="ar">أجرة كاب أصفر</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+    <tr><td>19670</td><td>London Cab<span class="ar">لندن كاب</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+    <tr><td>19000</td><td>Pizza Hut<span class="ar">بيتزا هت</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+    <tr><td>19991</td><td>McDonald's<span class="ar">ماكدونالدز</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+    <tr><td>19019</td><td>KFC<span class="ar">كنتاكي</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
+  </table></div>
+
+  <div class="tbl-title">🚨 Emergency &amp; Official <span class="ar">الطوارئ والأرقام الرسمية</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>Number<br><span class="ar">الرقم</span></th><th>Service<br><span class="ar">الخدمة</span></th></tr>
+    <tr><td><b>122</b></td><td>Police<span class="ar">الشرطة</span></td></tr>
+    <tr><td><b>123</b></td><td>Ambulance<span class="ar">الإسعاف</span></td></tr>
+    <tr><td><b>180</b></td><td>Fire department<span class="ar">المطافئ</span></td></tr>
+    <tr><td><b>155</b></td><td>NTRA telecom complaints (free)<span class="ar">شكاوى الجهاز القومي للاتصالات — مجاني</span></td></tr>
+  </table></div>
+</section>
+
+<section id="faq">
+  <div class="searchwrap" style="position:sticky">
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="faqSearch" type="text" placeholder='Search FAQs — Arabic or English / ابحث في الأسئلة الشائعة بالعربي أو الإنجليزي' autocomplete="off">
+      <span class="count" id="faqCount"></span>
+    </div>
+  </div>
+  <div id="faqList"></div>
+</section>
+
+
+<section id="tax">
+  <div class="tool">
+    <h2>🧮 Telecom Tax Calculator <span class="ar">حاسبة ضرائب الاتصالات</span></h2>
+    <p class="desc">Select the line type, then enter the base amount. Taxes are calculated per the Egyptian regulations for each line type.
+      <span class="ar" style="display:block;margin-top:.3rem">اختر نوع الخط، ثم أدخل القيمة الأساسية. تُحسب الضرائب حسب اللوائح المصرية لكل نوع خط.</span></p>
+
+    <div class="field">
+      <label for="taxLineType">Line type / نوع الخط</label>
+      <select id="taxLineType">
+        <option value="postpaid">Postpaid Mobile / موبايل فاتورة</option>
+        <option value="prepaid">Prepaid Mobile / موبايل كارت</option>
+        <option value="dsl">DSL Home Internet / نت أرضي منزلي</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="billInput">Base amount (EGP) / القيمة الأساسية</label>
+      <input id="billInput" type="number" min="0" step="0.01" placeholder="e.g. 575">
+      <div class="hint" id="taxHint">Postpaid: Schedule Tax 8% + VAT 14% + fixed fees (EGP 10 + 0.67)</div>
+    </div>
+
+    <div class="result" id="taxResult">
+      <div class="rhead">Breakdown / التفصيل</div>
+      <div class="rrow"><div class="lbl">Base amount <span class="ar">القيمة الأساسية</span></div><div class="val" id="tBase">—</div></div>
+      <div class="rrow" id="tDevRow"><div class="lbl">State Development Fee <span class="ar">رسوم تنمية الدولة</span> (fixed)</div><div class="val" id="tDev">—</div></div>
+      <div class="rrow" id="tStampRow"><div class="lbl">Stamp Duty <span class="ar">الدمغة</span> (fixed)</div><div class="val" id="tStamp">—</div></div>
+      <div class="rrow" id="tSubRow"><div class="lbl">Subtotal <span class="ar">المجموع الفرعي</span></div><div class="val" id="tSub">—</div></div>
+      <div class="rrow" id="tSchedRow"><div class="lbl">Schedule Tax <span class="ar">ضريبة الجدول</span> <small style="color:#a8a29e" id="tSchedLabel">(on subtotal)</small></div><div class="val" id="tSched">—</div></div>
+      <div class="rrow total" id="tVatRow"><div class="lbl">VAT <span class="ar">ضريبة القيمة المضافة</span> <small style="color:#fecaca" id="tVatLabel">(on subtotal + schedule)</small></div><div class="val" id="tVat">—</div></div>
+      <div class="rrow grand"><div class="lbl"><b>FINAL TOTAL</b> <span class="ar">الإجمالي النهائي المستحق</span></div><div class="val" id="tTotal">—</div></div>
+      <div class="rrow"><div class="lbl">Effective tax rate <span class="ar">نسبة الضرائب الفعلية</span></div><div class="val" id="tRate">—</div></div>
+    </div>
+  </div>
+
+  <div class="tool" style="background:#fffbeb; border-color:#fcd34d">
+    <h2 style="font-size:1.05rem">📖 Tax Rules by Line Type <span class="ar">قواعد الضرائب لكل نوع خط</span></h2>
+    <div style="font-size:.88rem; line-height:2; color:#78350f">
+      <b>Postpaid Mobile / موبايل فاتورة:</b> Schedule Tax 8% + VAT 14% + Dev Fee EGP 10 + Stamp EGP 0.67<br>
+      <span class="ar" dir="rtl">ضريبة الجدول ٨٪ + ضريبة القيمة المضافة ١٤٪ + رسم تنمية ١٠ جنيه + دمغة ٠.٦٧ جنيه</span><br>
+      <b>Prepaid Mobile / موبايل كارت:</b> Flat tax <b>1.43%</b> on recharge amount (no fixed fees)<br>
+      <span class="ar" dir="rtl">ضريبة ثابتة <b>١.٤٣٪</b> على قيمة الشحن (لا توجد رسوم ثابتة)</span><br>
+      <b>DSL Home Internet / نت أرضي منزلي:</b> Flat tax <b>1.14%</b> on bill amount (no fixed fees)<br>
+      <span class="ar" dir="rtl">ضريبة ثابتة <b>١.١٤٪</b> على قيمة الفاتورة (لا توجد رسوم ثابتة)</span>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="tool">
+    <h2>📊 Data Unit Converter <span class="ar">محوّل وحدات البيانات</span></h2>
+    <p class="desc">Enter any amount and unit — see the full conversion ladder. <span class="ar" style="display:block;margin-top:.3rem">أدخل أي قيمة ووحدة وشاهد التحويل الكامل من الكيلوبايت إلى الجيجابايت</span></p>
+    <div class="dwrap">
+      <div class="field">
+        <label for="dataVal">Value / القيمة</label>
+        <input id="dataVal" type="number" min="0" step="any" placeholder="e.g. 500">
+      </div>
+      <div class="field">
+        <label for="dataUnit">Unit / الوحدة</label>
+        <select id="dataUnit">
+          <option value="KB">KB — Kilobyte / كيلوبايت</option>
+          <option value="MB" selected>MB — Megabyte / ميجابايت</option>
+          <option value="GB">GB — Gigabyte / جيجابايت</option>
+          <option value="TB">TB — Terabyte / تيرابايت</option>
+        </select>
+      </div>
+    </div>
+    <div class="dres" id="dataRes" style="display:none">
+      <div class="rhead" style="color:#92400e">Conversion / التحويل</div>
+      <div class="dl"><span>Bytes <span class="ar">بايت</span></span><b id="dBytes">—</b></div>
+      <div class="dl"><span>Kilobytes <span class="ar">كيلوبايت</span></span><b id="dKB">—</b></div>
+      <div class="dl"><span>Megabytes <span class="ar">ميجابايت</span></span><b id="dMB">—</b></div>
+      <div class="dl"><span>Gigabytes <span class="ar">جيجابايت</span></span><b id="dGB">—</b></div>
+      <div class="dl total"><span>Terabytes <span class="ar">تيرابايت</span></span><b id="dTB">—</b></div>
+      <div style="font-size:.78rem; color:#92400e; margin-top:.6rem" class="ar">١ جيجابايت = ١٠٢٤ ميجابايت = ١٬٠٤٨٬٥٧٦ كيلوبايت</div>
+    </div>
+    <div class="tblwrap" style="margin-top:1.4rem"><table>
+      <tr><th>Quick reference<br><span class="ar">مرجع سريع</span></th><th>Equals<br><span class="ar">يساوي</span></th></tr>
+      <tr><td>1 KB<span class="ar">كيلوبايت واحد</span></td><td>1,024 Bytes</td></tr>
+      <tr><td>1 MB<span class="ar">ميجابايت واحد</span></td><td>1,024 KB / 1,048,576 Bytes</td></tr>
+      <tr><td>1 GB<span class="ar">جيجابايت واحد</span></td><td>1,024 MB / 1,048,576 KB</td></tr>
+      <tr><td>1 TB<span class="ar">تيرابايت واحد</span></td><td>1,024 GB</td></tr>
+      <tr><td>Flex billing<span class="ar">نظام فليكس</span></td><td>1 Flex = 1 MB</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="pro">
+  <div class="tool">
+    <h2>⏳ RED Pro-Rata Allowance Calculator <span class="ar">حاسبة الباقة الجزئية لعملاء ريد</span></h2>
+    <p class="desc">For RED customers who subscribe mid-cycle: quota ÷ 30 × days remaining until the billing renewal date (1st, 4th or 16th of the month — auto-assigned by the system, manually selectable here).
+      <span class="ar" style="display:block;margin-top:.3rem">لعملاء ريد المشتركين قرب تاريخ التجديد: يتم تقسيم الباقة على ٣٠ وضربها في عدد الأيام المتبقية حتى تاريخ تجديد الفاتورة (١ أو ٤ أو ١٦ من الشهر — يحدده النظام تلقائياً ويمكن اختياره يدوياً هنا).</span></p>
+
+    <div class="field">
+      <label for="proDate">Subscription / activation date / تاريخ الاشتراك
+        <span class="hint" style="display:inline">— اليوم اللي اشترك فيه العميل</span></label>
+      <input id="proDate" type="date">
+    </div>
+
+    <div class="field">
+      <label for="proPlan">RED plan / نظام ريد</label>
+      <select id="proPlan"></select>
+      <div class="hint" id="proPlanHint"></div>
+    </div>
+
+    <div class="field">
+      <label for="proCycle">Billing renewal date / تاريخ تجديد الفاتورة
+        <span class="hint" style="display:inline">— الحد الشهري (١ / ٤ / ١٦) اللي بيحدده النظام</span></label>
+      <select id="proCycle">
+        <option value="auto" selected>Auto-assign (nearest upcoming) / تحديد تلقائي (الأقرب)</option>
+        <option value="1">1st of month / أول الشهر</option>
+        <option value="4">4th of month / رابع الشهر</option>
+        <option value="16">16th of month / سادس عشر الشهر</option>
+      </select>
+    </div>
+
+    <div class="result" id="proResult">
+      <div class="rhead" id="proHead">Allowance breakdown / تفصيل الباقة <span class="ar" id="proHeadAr">— قم بإدخال تاريخ الاشتراك</span></div>
+      <div class="pr-grid">
+        <div class="pr-cell">
+          <div class="pr-lbl">Days remaining<span class="ar">الأيام المتبقية</span></div>
+          <div class="pr-val" id="proDays">—</div>
+          <div class="pr-sub" id="proDaysSub"></div>
+        </div>
+        <div class="pr-cell">
+          <div class="pr-lbl">Minutes<span class="ar">الدقائق</span></div>
+          <div class="pr-val" id="proMins">—</div>
+          <div class="pr-sub" id="proMinsSub"></div>
+        </div>
+        <div class="pr-cell">
+          <div class="pr-lbl">Data (MB / GB)<span class="ar">النت</span></div>
+          <div class="pr-val" id="proData">—</div>
+          <div class="pr-sub" id="proDataSub"></div>
+        </div>
+        <div class="pr-cell">
+          <div class="pr-lbl">SMS<span class="ar">الرسائل</span></div>
+          <div class="pr-val" id="proSms">—</div>
+          <div class="pr-sub" id="proSmsSub"></div>
+        </div>
+      </div>
+      <div class="rrow"><div class="lbl">Full monthly quota<span class="ar">الباقة الكاملة شهرياً</span></div><div class="val" id="proFull">—</div></div>
+      <div class="rrow"><div class="lbl">Proration formula<span class="ar">معادلة التقسيم</span></div><div class="val" id="proFormula" style="white-space:normal; font-size:.85rem; font-weight:400">—</div></div>
+      <div class="rrow" id="proFeeRow" style="display:none"><div class="lbl">Prorated subscription fee<span class="ar">قيمة الاشتراك الجزئية</span></div><div class="val" id="proFee">—</div></div>
+      <div class="rrow total"><div class="lbl"><b>Next billing renewal</b><span class="ar">تاريخ التجديد القادم</span></div><div class="val" id="proNext">—</div></div>
+    </div>
+  </div>
+
+  <div class="tool" style="background:#fffbeb; border-color:#fcd34d">
+    <h2 style="font-size:1.05rem">📖 How RED proration works <span class="ar">طريقة حساب الباقة الجزئية</span></h2>
+    <div style="font-size:.88rem; line-height:2; color:#78350f">
+      1. RED customers get one of <b>3 billing cycles</b>: renewal on the <b>1st</b>, <b>4th</b> or <b>16th</b> of the month — assigned automatically by the system. <span class="ar" dir="rtl">عميل ريد بيتحدد له تاريخ تجديد من ثلاثة: ١ أو ٤ أو ١٦ من الشهر — تلقائياً من النظام.</span><br>
+      2. If the customer subscribes mid-cycle, allowances are <b>prorated</b>: quota ÷ 30 × days from subscription date up to the renewal date. <span class="ar" dir="rtl">لو اشترك العميل وسط الشهر، الباقة بتتحسب جزئياً: الباقة ÷ ٣٠ × عدد الأيام من تاريخ الاشتراك حتى تاريخ التجديد.</span><br>
+      3. The same proration applies to the <b>subscription fee</b> for the partial period. <span class="ar" dir="rtl">نفس التقسيم بيطبّق على قيمة الاشتراك للفترة الجزئية.</span><br>
+      4. Subscribing <b>on the renewal date itself = full allowance</b> for the whole cycle. <span class="ar" dir="rtl">الاشتراك يوم التجديد نفسه = الباقة كاملة للشهر.</span>
+    </div>
+  </div>
+</section>
+
+<section id="netbalance">
+  <div class="tool">
+    <h2>💰 Egypt Top-Up Net Balance Calculator <span class="ar">حاسبة الرصيد الصافي بعد الشحن</span></h2>
+    <p class="desc">In Egypt, top-ups are subject to taxes/fees. The net balance received is 70% of the paid amount. Enter either value — the other calculates automatically.
+      <span class="ar" style="display:block;margin-top:.3rem">في مصر، الشحن يخضع لضرائب/رسوم. الرصيد الصافي المستلم يساوي ٧٠٪ من المبلغ المدفوع. أدخل أي قيمة — الأخرى تحسب تلقائياً.</span></p>
+
+    <div class="dwrap">
+      <div class="field">
+        <label for="paidAmount">Amount Paid (EGP) / المبلغ المدفوع</label>
+        <input id="paidAmount" type="number" min="0" step="0.01" placeholder="e.g. 100">
+        <div class="hint">Total you pay including taxes/fees</div>
+      </div>
+      <div class="field">
+        <label for="netBalance">Net Balance Received (EGP) / الرصيد الصافي المستلم</label>
+        <input id="netBalance" type="number" min="0" step="0.01" placeholder="e.g. 70">
+        <div class="hint">Actual balance added to your line (70%)</div>
+      </div>
+    </div>
+
+    <div class="result" id="netResult">
+      <div class="rhead">Calculation / الحساب</div>
+      <div class="rrow"><div class="lbl">Paid Amount <span class="ar">المبلغ المدفوع</span></div><div class="val" id="nbPaid">—</div></div>
+      <div class="rrow"><div class="lbl">Net Balance (70%) <span class="ar">الرصيد الصافي (٧٠٪)</span></div><div class="val" id="nbNet">—</div></div>
+      <div class="rrow total"><div class="lbl">Taxes/Fees Deducted (30%) <span class="ar">الضرائب/الرسوم المخصومة (٣٠٪)</span></div><div class="val" id="nbFee">—</div></div>
+      <div class="rrow grand"><div class="lbl"><b>Formula</b> <span class="ar">المعادلة</span></div><div class="val" style="font-size:.85rem; white-space:normal">Net = Paid × 0.70  |  Paid = Net ÷ 0.70  <span class="ar" dir="rtl">الصافي = المدفوع × ٠.٧٠  |  المدفوع = الصافي ÷ ٠.٧٠</span></div></div>
+    </div>
+  </div>
+
+  </section>
+
+<section id="billvalidity">
+  <div class="tool">
+    <h2>📅 Bill Validity / صلاحية الفاتورة</h2>
+    <p class="desc">Enter the bill details to check line status and deferral limits. Based on Vodafone Egypt collection timeline rules.
+      <span class="ar" style="display:block;margin-top:.3rem">أدخل تفاصيل الفاتورة لمعرفة حالة الخط وحدود التأجيل. وفقاً لقواعد فودافون مصر للجدول الزمني للتحصيل.</span></p>
+
+    <div class="triowrap">
+      <div class="field">
+        <label for="bvBillDate">Bill Date / تاريخ الفاتورة</label>
+        <input id="bvBillDate" type="date">
+      </div>
+      <div class="field">
+        <label for="bvDueDate">Siebel Due Date / تاريخ الاستحقاق (النظام)</label>
+        <input id="bvDueDate" type="date">
+      </div>
+      <div class="field">
+        <label for="bvSegment">Customer Segment / قطاع العميل</label>
+        <select id="bvSegment">
+          <option value="Platinum">Platinum</option>
+          <option value="Premium BC1">Premium BC1</option>
+          <option value="Premium BC2">Premium BC2</option>
+          <option value="Premium BC4">Premium BC4</option>
+          <option value="High">High</option>
+          <option value="Mass">Mass</option>
+          <option value="Pure Easy">Pure Easy</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result" id="bvResult">
+      <div class="rhead">Bill Validity Result / نتيجة صلاحية الفاتورة</div>
+      
+      <div class="rrow"><div class="lbl">Bill Date <span class="ar">تاريخ الفاتورة</span></div><div class="val" id="bvOutBillDate">—</div></div>
+      <div class="rrow"><div class="lbl">Siebel Due Date <span class="ar">تاريخ الاستحقاق</span></div><div class="val" id="bvOutDueDate">—</div></div>
+      <div class="rrow"><div class="lbl">Segment <span class="ar">القطاع</span></div><div class="val" id="bvOutSegment">—</div></div>
+      <div class="rrow"><div class="lbl">Bill Day <span class="ar">يوم الفاتورة</span></div><div class="val" id="bvOutBillDay">—</div></div>
+
+      <div class="rrow total"><div class="lbl">Semi-HL Date <span class="ar">نصف مدة التأجيل (Semi-HL)</span></div><div class="val" id="bvSemiHL">—</div></div>
+      <div class="rrow total"><div class="lbl">Max. Deal Date <span class="ar">أقصى تاريخ للصفقة</span></div><div class="val" id="bvMaxDeal">—</div></div>
+
+      <div class="rrow"><div class="lbl">Time Line <span class="ar">المهلة الزمنية</span></div><div class="val" id="bvTimeline">—</div></div>
+      <div class="rrow"><div class="lbl">Deal Days <span class="ar">أيام الصفقة</span></div><div class="val" id="bvDealDays">—</div></div>
+
+      <div class="rrow grand">
+        <div class="lbl">Line Status <span class="ar">حالة الخط</span></div>
+        <div class="val" id="bvStatus">
+          <span id="bvStatusIcon"></span>
+          <span id="bvStatusText">—</span>
+        </div>
+      </div>
+
+      <div class="rrow" id="bvDeferralRow" style="display:none">
+        <div class="lbl">Max Deferral Days <span class="ar">أقصى أيام التأجيل</span></div>
+        <div class="val" id="bvMaxDeferral">—</div>
+      </div>
+
+      <div class="rrow" id="bvMsgRow" style="display:none">
+        <div class="lbl">Note <span class="ar">ملاحظة</span></div>
+        <div class="val" id="bvMsg" style="color:#fca5a5"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>Compiled from vodafone.com.eg • Sep 12, 2026 • For call-center agent reference — unofficial tool</div>
+  <div class="ar">تم جمع البيانات من موقع فودافون مصر • ١٢ سبتمبر ٢٠٢٦ • أداة غير رسمية لخدمة موظفي خدمة العملاء</div>
+</footer>
+
+
+<script src="faq-data.js"></script>
+<script src="live-data.js" onerror="window.VF_LIVE=null"></script>
+<script>
+/* ============ CODES DATABASE ============
+   USSD placeholders use [number]/[amount]/[code] brackets.
+   v:1 = normalized from inconsistent site formatting — dial-test recommended. */
+const CODES = [
+ // --- Customer service ---
+ {c:"888", en:"RED & postpaid customer service — also plan migration help", ar:"خدمة عملاء ريد والفاتورة — والمساعدة في تحويل النظام", cat:"sms", top:1},
+ {c:"7000", en:"General customer service", ar:"خدمة العملاء العامة", cat:"sms", top:1},
+ {c:"7001", en:"Vodafone Cash customer service", ar:"خدمة عملاء فودافون كاش", cat:"cash", top:1},
+ {c:"247", en:"Call center (from Vodafone lines)", ar:"مركز الاتصال من خطوط فودافون", cat:"sms", v:1},
+ {c:"2121", en:"Directory assistance — 7 languages, 24/7", ar:"خدمة الدليل — ٧ لغات على مدار الساعة", cat:"info"},
+ {c:"*888*10#", en:"Locate nearest Vodafone store", ar:"تحديد أقرب فرع فودافون", cat:"svc"},
+ {c:"*888*3#", en:"Missed Call Keeper — monthly subscription (5 LE)", ar:"الاحتفاظ بالمكالمات — اشتراك شهري (٥ جنيه)", cat:"svc", v:1},
+ {c:"*777#", en:"Missed Call Keeper — pay per event", ar:"الاحتفاظ بالمكالمات — الدفع لكل مكالمة فائتة", cat:"svc"},
+ {c:"*62*+201002369777**#", en:"Missed Call Keeper — call forwarding while roaming", ar:"تحويل المكالمات للتجوال — خدمة الاحتفاظ بالمكالمات", cat:"svc"},
+ {c:"*888*[number]#", en:"Get your PUK by entering your own number", ar:"استخراج رقم الـ PUK بإدخال رقمك", cat:"svc", v:1},
+ {c:"*888*4#", en:"Vodafone Live activation", ar:"تفعيل فودافون لايف", cat:"svc", v:1},
+ {c:"*888*5#", en:"Roaming activation", ar:"تفعيل خدمة التجوال", cat:"svc", v:1},
+ // --- Balance / recharge ---
+ {c:"*868*1#", en:"Balance inquiry", ar:"الاستعلام عن الرصيد", cat:"sms", top:1},
+ {c:"*858*[code]#", en:"Recharge with scratch card", ar:"شحن رصيد بكارت الشحن", cat:"sms", top:1},
+ {c:"*868*2*[number]*[amount]#", en:"Transfer balance (1–50 LE, 18% fee)", ar:"تحويل رصيد — من ١ إلى ٥٠ جنيه برسم ١٨٪", cat:"sms", top:1},
+ {c:"*878#", en:"Know your own mobile number", ar:"معرفة رقم موبايلك", cat:"sms", v:1},
+ {c:"*555#", en:"Remaining free units", ar:"الوحدات المجانية المتبقية", cat:"sms", v:1},
+ {c:"*150#", en:"Last call received", ar:"آخر مكالمة مستلمة", cat:"sms", v:1},
+ {c:"*100#", en:"Date & time", ar:"التاريخ والوقت", cat:"sms", v:1},
+ {c:"*818#", en:"Vodafone One points", ar:"نقاط فودافون ون", cat:"sms", v:1},
+ {c:"*999*2#", en:"Call charges menu", ar:"قائمة أسعار المكالمات", cat:"sms"},
+ {c:"*999#", en:"Receive English menu via SMS", ar:"استقبال القائمة الإنجليزية برسالة", cat:"sms"},
+ {c:"*85#", en:"Activate Fakka/Mared card units from balance", ar:"تفعيل وحدات كارت الفكة أو المارد من الرصيد", cat:"sms"},
+ {c:"*858*[recharge_code]#", en:"Recharge Fakka card units (minutes + MBs)", ar:"شحن وحدات كارت الفكة (دقائق + ميجابايتس)", cat:"sms"},
+ {c:"*86#", en:"Control Fakka units", ar:"التحكم في وحدات الفكة", cat:"sms"},
+ // --- Internet ---
+ {c:"*00#", en:"Subscribe & manage Plus internet bundles", ar:"الاشتراك وإدارة باقات بلس للإنترنت", cat:"inet", top:1},
+ {c:"*2000#", en:"Internet bundles menu", ar:"قائمة باقات الإنترنت", cat:"inet", top:1},
+ {c:"*00*1#", en:"Plus YouTube bundle (6.5 LE)", ar:"باقة بلس يوتيوب (٦.٥ جنيه)", cat:"inet"},
+ {c:"*00*2#", en:"Plus TikTok bundle (6.5 LE)", ar:"باقة بلس تيك توك (٦.٥ جنيه)", cat:"inet"},
+ {c:"*00*3#", en:"Plus Play gaming bundle (6.5 LE) — PUBG/COD/FreeFire", ar:"باقة بلاي للألعاب — ببجي وكول أوف ديوتي وفري فاير", cat:"inet"},
+ {c:"*2000*9#", en:"Check internet consumption & remaining MBs", ar:"متابعة استهلاك النت والميجابايتس المتبقية", cat:"inet"},
+ {c:"*2000*14#", en:"Activate 4G network", ar:"تنشيط شبكة الجيل الرابع 4G", cat:"inet"},
+ {c:"*200#", en:"Internet offers", ar:"عروض الإنترنت", cat:"inet"},
+ {c:"*2828#", en:"Manage DSL line — change bundle, follow usage", ar:"إدارة خط الإنترنت الأرضي — تغيير الباقة ومتابعة الاستهلاك", cat:"inet"},
+ {c:"*2828*393#", en:"Replace old router with high-speed router", ar:"استبدال الراوتر القديم بالراوتر عالي السرعة", cat:"inet"},
+ {c:"2828", en:"DSL voice support — also cancellation requests", ar:"الدعم الفني الصوتي للـ DSL — وطلبات الإلغاء", cat:"inet"},
+ {c:"16416", en:"DSL new subscription line", ar:"خط الاشتراك الجديد في الإنترنت الأرضي", cat:"inet"},
+ {c:"8070", en:"SMS 'home wireless' — locate router (max 3/year)", ar:"أرسل رسالة لتحديد مكان الراوتر الهوائي (٣ مرات سنوياً)", cat:"inet"},
+ // --- Vodafone Cash ---
+ {c:"*9#", en:"Vodafone Cash main menu", ar:"القائمة الرئيسية لفودافون كاش", cat:"cash", top:1},
+ {c:"*9*5#", en:"Create/set 6-digit wallet PIN", ar:"إنشاء أو تغيير الرقم السري للمحفظة (٦ أرقام)", cat:"cash", top:1},
+ {c:"*9*7#", en:"Transfer money — any wallet in Egypt", ar:"تحويل أموال لأي محفظة داخل مصر", cat:"cash", top:1},
+ {c:"*9*7*[number]*[amount]#", en:"Transfer money — direct code", ar:"تحويل أموال بالكود المباشر", cat:"cash"},
+ {c:"*9*10#", en:"Recharge any Vodafone number (5–200 LE)", ar:"شحن رصيد أي رقم فودافون (٥–٢٠٠ جنيه)", cat:"cash"},
+ {c:"*9*0*[amount]#", en:"Recharge own number from wallet", ar:"شحن رقمك من المحفظة", cat:"cash"},
+ {c:"*9*3*[number]*[amount]#", en:"Recharge another number from wallet", ar:"شحن رقم فودافون آخر من المحفظة", cat:"cash"},
+ {c:"*9*4*[number]*[amount]#", en:"Pay bill — own or others (up to 60k)", ar:"دفع الفاتورة — لك أو لغيرك (حتى ٦٠ ألف)", cat:"cash"},
+ {c:"*9*12#", en:"Reset forgotten Cash PIN (card no. + new PIN)", ar:"إعادة تعيين الرقم السري — برقم البطاقة ورقم سري جديد", cat:"cash"},
+ {c:"*9*22#", en:"ATM withdrawal code via SMS", ar:"كود السحب من ماكينات الصراف برسالة", cat:"cash"},
+ {c:"*9*100#", en:"Virtual card for online payment (5 LE, 2 uses/24h)", ar:"كارت افتراضي للشراء أونلاين (٥ جنيه، استخدامان باليوم)", cat:"cash"},
+ {c:"*9*105#", en:"Pay utilities — electricity, gas, water", ar:"دفع فواتير المرافق — الكهرباء والغاز والمياه", cat:"cash"},
+ {c:"*9*28#", en:"Renew Flex / internet bundle from wallet", ar:"تجديد باقة فليكس أو الإنترنت من المحفظة", cat:"cash"},
+ {c:"*9*200#", en:"Fakka 2 LE (30 min / 60 social MBs)", ar:"فكة ٢ جنيه (٣٠ دقيقة / ٦٠ ميجا سوشيال)", cat:"cash"},
+ {c:"*9*400#", en:"Fakka 4.25 LE (190 min / 380 MBs)", ar:"فكة ٤.٢٥ جنيه (١٩٠ دقيقة / ٣٨٠ ميجا)", cat:"cash"},
+ {c:"*9*600#", en:"Fakka 6 LE (300 min / 600 MBs)", ar:"فكة ٦ جنيه (٣٠٠ دقيقة / ٦٠٠ ميجا)", cat:"cash"},
+ {c:"*9*800#", en:"Fakka 8 LE (350 min / 700 MBs)", ar:"فكة ٨ جنيه (٣٥٠ دقيقة / ٧٠٠ ميجا)", cat:"cash"},
+ {c:"*9*9#", en:"Nearest Cash deposit/withdrawal location", ar:"أقرب نقطة إيداع أو سحب نقدي", cat:"cash"},
+ // --- Flex ---
+ {c:"*880#", en:"Subscribe / renew / change Flex plan", ar:"الاشتراك والتجديد وتغيير نظام فليكس", cat:"flex", top:1},
+ {c:"*225#", en:"Renew bundle & know renewal date", ar:"تجديد الباقة ومعرفة ميعاد التجديد", cat:"flex", top:1},
+ {c:"*880*88#", en:"Flex entertainment subscriptions", ar:"الاشتراكات الترفيهية لنظام فليكس", cat:"flex"},
+ {c:"*909#", en:"Flex Family — share bundle with a member", ar:"فليكس عيلة — مشاركة الباقة مع أحد أفراد العيلة", cat:"flex"},
+ {c:"*365#", en:"Flex offers", ar:"عروض الفليكسات", cat:"flex"},
+ {c:"*60#", en:"Track balance / flex consumption", ar:"متابعة استهلاك الرصيد والفليكسات", cat:"flex"},
+ {c:"*5#", en:"Flex Coins rewards program", ar:"برنامج فليكس كوينز للمكافآت", cat:"flex"},
+ // --- Shokran / services ---
+ {c:"*3#", en:"Sallefny — borrow 3 LE credit", ar:"سلفني — استلف رصيد ٣ جنيه", cat:"svc", top:1},
+ {c:"*3*5#", en:"Track Sallefny loan history", ar:"متابعة تاريخ السلف", cat:"svc"},
+ {c:"*505*[number]#", en:"Kallemny — call-me SMS (2 free/day)", ar:"كلمني — رسالة اتصل بي (رسالتان مجاناً يومياً)", cat:"svc"},
+ {c:"*506*[number]#", en:"Call-me SMS to other networks", ar:"رسالة اتصل بي للشبكات الأخرى", cat:"svc"},
+ {c:"#[number]", en:"Edfa3ly — receiver pays the call", ar:"ادفعلي — المستلم يدفع تكلفة المكالمة", cat:"svc"},
+ {c:"*6#", en:"Wasalny traffic info (30 pt)", ar:"وصلني — معرفة حالات الطريق (٣٠ قرش)", cat:"svc"},
+ {c:"*60*0#", en:"Track Shokran services charges", ar:"متابعة رسوم خدمات شكراً", cat:"svc"},
+ {c:"*55*0#", en:"Cancel call tone", ar:"إلغاء الكول تون", cat:"svc"},
+ {c:"*55*[song_code]#", en:"Set call tone by song code", ar:"تشغيل كول تون بكود الأغنية", cat:"svc", v:1},
+ {c:"*7#", en:"Blacklist — block unwanted calls", ar:"القائمة السوداء — حجب المكالمات غير المرغوبة", cat:"svc"},
+ {c:"*45#", en:"Whitelist — choose who can call you", ar:"القائمة البيضاء — تحديد الأرقام المسموح بها", cat:"svc"},
+ {c:"*9001#", en:"End-of-call notification ON (1 pt)", ar:"تشغيل تنبيه نهاية المكالمة (قرش واحد)", cat:"svc"},
+ {c:"*9000#", en:"End-of-call notification OFF (free)", ar:"إلغاء تنبيه نهاية المكالمة (مجاناً)", cat:"svc"},
+ {c:"*[number]", en:"Send MiniCall voice message", ar:"إرسال مكالم صوتي — اتصل بـ * ثم الرقم", cat:"svc"},
+ {c:"*0#", en:"Hear new MiniCalls (free)", ar:"سماع المكالمات الصوتية الجديدة (مجاناً)", cat:"svc"},
+ {c:"*1#", en:"Hear old MiniCalls (30 pt)", ar:"سماع المكالمات الصوتية القديمة (٣٠ قرش)", cat:"svc"},
+ {c:"*5055#", en:"12 LE unified international rate (30 LE/mo + 4.5 setup)", ar:"العالم بين إيدك — سعر موحد ١٢ جنيه للدقيقة الدولية", cat:"svc"},
+ // --- Emergency ---
+ {c:"122", en:"Police", ar:"الشرطة", cat:"emg", top:1},
+ {c:"123", en:"Ambulance", ar:"الإسعاف", cat:"emg", top:1},
+ {c:"180", en:"Fire department", ar:"المطافئ", cat:"emg", top:1},
+ {c:"155", en:"NTRA telecom complaints (free)", ar:"شكاوى الجهاز القومي للاتصالات — مجاني", cat:"emg"},
+ {c:"128", en:"Dakhleya — Interior Ministry", ar:"الداخلية", cat:"emg"}
+];
+
+/* ============ ARABIC DIGIT + TEXT NORMALIZATION (for search) ============ */
+const AR_DIGITS = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+function norm(s){
+  if(!s) return '';
+  return s.toLowerCase()
+    .replace(/[٠-٩]/g, ch => AR_DIGITS[ch])       // Arabic-Indic digits
+    .replace(/[\u064B-\u0652\u0640]/g, '')        // tashkeel + tatweel
+    .replace(/[أإآٱ]/g, 'ا')                      // alef variants
+    .replace(/ى/g, 'ي')                           // alef maqsura -> ya
+    .replace(/ة/g, 'ه')                           // taa marbuta -> ha
+    .replace(/\s+/g, ' ')                         // collapse spaces
+    .trim();
+}
+
+/* ============ RENDER CODES ============ */
+const CATS = {sms:"Service & Balance", cash:"Vodafone Cash", inet:"Internet & DSL", svc:"Line Services", flex:"Flex", red:"RED Postpaid", info:"Directory & Info", emg:"Emergency"};
+const CATS_AR = {sms:"الخدمات والرصيد", cash:"فودافون كاش", inet:"الإنترنت والأرضي", svc:"خدمات الخط", flex:"فليكس", red:"ريد للفاتورة", info:"الدليل والمعلومات", emg:"الطوارئ"};
+const grid = document.getElementById('cardsGrid');
+const chipsEl = document.getElementById('chips');
+const searchInput = document.getElementById('searchInput');
+const resCount = document.getElementById('resCount');
+const noRes = document.getElementById('noRes');
+let activeCat = 'all';
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hl(text, q){
+  if(!q) return esc(text);
+  const n = norm(text), nq = norm(q);
+  const idx = n.indexOf(nq);
+  if(idx===-1) return esc(text);
+  // map normalized index back to original via progressive normalization
+  let pos = 0, normPos = 0, start = -1, end = -1;
+  for(let i=0; i<=text.length && normPos<=n.length; i++){
+    if(normPos===idx && start===-1) start = i;
+    if(normPos===idx+nq.length && end===-1){ end = i; break; }
+    normPos += norm(text[i]||'').length;
+  }
+  if(start===-1 || end===-1) return esc(text);
+  return esc(text.slice(0,start)) + '<mark>' + esc(text.slice(start,end)) + '</mark>' + esc(text.slice(end));
+}
+function renderCards(){
+  const q = searchInput.value.trim();
+  const nq = norm(q);
+  const list = CODES.filter(c=>{
+    if(activeCat!=='all' && c.cat!==activeCat) return false;
+    if(!nq) return true;
+    return norm(c.c).includes(nq) || norm(c.en).includes(nq) || norm(c.ar).includes(nq);
+  });
+  resCount.textContent = list.length + ' / ' + CODES.length;
+  noRes.style.display = list.length ? 'none' : 'block';
+  grid.innerHTML = list.map(c=>`
+    <div class="card ${c.top?'top':''}">
+      <span class="badge ${c.cat}">${CATS[c.cat]}</span>${c.v?'<span class="vtag">⚠ verify</span>':''}
+      <div class="code-row">
+        <span class="code">${hl(c.c, q)}</span>
+        <button class="copy" onclick="copyCode(this,'${c.c.replace(/'/g,"\\'")}')">copy</button>
+      </div>
+      <div class="en">${hl(c.en, q)}</div>
+      <div class="ar-line ar">${hl(c.ar, q)}</div>
+    </div>`).join('');
+}
+function copyCode(btn, code){
+  navigator.clipboard.writeText(code).then(()=>{
+    btn.textContent='✓ done'; btn.classList.add('done');
+    setTimeout(()=>{btn.textContent='copy'; btn.classList.remove('done')},1500);
+  });
+}
+chipsEl.innerHTML = '<button class="chip active" data-cat="all">All / الكل</button>' +
+  Object.entries(CATS).map(([k,v])=>`<button class="chip" data-cat="${k}">${v} / ${CATS_AR[k]}</button>`).join('');
+chipsEl.addEventListener('click', e=>{
+  if(e.target.classList.contains('chip')){
+    chipsEl.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    e.target.classList.add('active');
+    activeCat = e.target.dataset.cat;
+    renderCards();
+  }
+});
+searchInput.addEventListener('input', renderCards);
+document.getElementById('statCodes').textContent = CODES.length;
+renderCards();
+
+/* ============ TABS ============ */
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t=>t.addEventListener('click', ()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(t.dataset.tab).classList.add('active');
+  window.scrollTo({top:0});
+}));
+
+/* ============ TAX CALCULATOR ============ */
+const TAX_RULES = {
+  postpaid: { devFee: 10, stamp: 0.67, schedRate: 0.08, vatRate: 0.14, fixedFees: true },
+  prepaid:  { devFee: 0,   stamp: 0,    schedRate: 0.0143, vatRate: 0,     fixedFees: false },
+  dsl:      { devFee: 0,   stamp: 0,    schedRate: 0.0114, vatRate: 0,     fixedFees: false }
+};
+const billInput = document.getElementById('billInput');
+const taxType = document.getElementById('taxLineType');
+const fmt = n => n.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' EGP';
+
+function updateTaxHint(){
+  const t = TAX_RULES[taxType.value];
+  const hint = document.getElementById('taxHint');
+  if(t.fixedFees){
+    hint.textContent = 'Schedule Tax 8% + VAT 14% + Dev Fee EGP 10 + Stamp EGP 0.67';
+  } else {
+    hint.textContent = 'Flat tax ' + (t.schedRate*100).toFixed(2) + '% on base amount (no fixed fees)';
+  }
+}
+
+function calcTax(){
+  const base = parseFloat(billInput.value);
+  const r = document.getElementById('taxResult');
+  if(isNaN(base) || base < 0){ r.classList.remove('show'); return; }
+
+  const t = TAX_RULES[taxType.value];
+  let sub, sched, vat, total, devFee, stamp;
+
+  if(t.fixedFees){
+    devFee = t.devFee;
+    stamp = t.stamp;
+    sub = base + devFee + stamp;
+    sched = sub * t.schedRate;
+    vat = (sub + sched) * t.vatRate;
+    total = sub + sched + vat;
+  } else {
+    devFee = 0; stamp = 0;
+    sub = base;
+    sched = base * t.schedRate;
+    vat = 0;
+    total = base + sched;
+  }
+
+  const effRate = base > 0 ? ((total - base)/base)*100 : 0;
+
+  document.getElementById('tBase').textContent = fmt(base);
+  document.getElementById('tDev').textContent = fmt(devFee);
+  document.getElementById('tStamp').textContent = fmt(stamp);
+  document.getElementById('tSub').textContent = fmt(sub);
+  document.getElementById('tSched').textContent = fmt(sched);
+  document.getElementById('tVat').textContent = fmt(vat);
+  document.getElementById('tTotal').textContent = fmt(total);
+  document.getElementById('tRate').textContent = effRate.toFixed(2) + '%';
+
+  // Show/hide rows for flat-tax types
+  const showFixed = t.fixedFees;
+  document.getElementById('tDevRow').style.display = showFixed ? 'flex' : 'none';
+  document.getElementById('tStampRow').style.display = showFixed ? 'flex' : 'none';
+  document.getElementById('tSubRow').style.display = showFixed ? 'flex' : 'none';
+  document.getElementById('tSchedRow').style.display = 'flex';
+  document.getElementById('tSchedLabel').textContent = '(flat tax on base)';
+  document.getElementById('tVatRow').style.display = t.vatRate > 0 ? 'flex' : 'none';
+
+  r.classList.add('show');
+}
+
+billInput.addEventListener('input', calcTax);
+taxType.addEventListener('change', () => { updateTaxHint(); calcTax(); });
+updateTaxHint();
+
+/* ============ DATA CONVERTER ============ */
+const UNITS = {KB:1, MB:1024, GB:1048576, TB:1073741824};
+const dv = document.getElementById('dataVal'), du = document.getElementById('dataUnit');
+const dres = document.getElementById('dataRes');
+function convData(){
+  const v = parseFloat(dv.value);
+  if(isNaN(v) || v<0){ dres.style.display='none'; return; }
+  const kb = v * UNITS[du.value];
+  dres.style.display='block';
+  document.getElementById('dBytes').textContent = (kb*1024).toLocaleString('en-US',{maximumFractionDigits:2});
+  document.getElementById('dKB').textContent = kb.toLocaleString('en-US',{maximumFractionDigits:4});
+  document.getElementById('dMB').textContent = (kb/1024).toLocaleString('en-US',{maximumFractionDigits:6});
+  document.getElementById('dGB').textContent = (kb/1048576).toLocaleString('en-US',{maximumFractionDigits:8});
+  document.getElementById('dTB').textContent = (kb/1073741824).toLocaleString('en-US',{maximumFractionDigits:8});
+}
+dv.addEventListener('input', convData);
+du.addEventListener('change', convData);
+
+/* ============ RED PRO-RATA CALCULATOR ============
+   Quota ÷ 30 × days until the billing renewal date (1/4/16 of month).
+   Plan minutes+GB come from live-sync RED data; SMS quota per plan is static. */
+const RED_SMS_QUOTA = { redessential: 500, redadvance: 1000, redprime: 1500, redelite: 2000, redexclusive: 3000 };
+const CYCLES = [1, 4, 16];
+const proDate = document.getElementById('proDate');
+const proPlan = document.getElementById('proPlan');
+const proCycle = document.getElementById('proCycle');
+const proResult = document.getElementById('proResult');
+
+function proFillPlans(){
+  const live = (window.VF_LIVE && window.VF_LIVE.data && window.VF_LIVE.data.redPlans) || [];
+  const plans = live.length ? live : [
+    {id:'redessential', name:'RED ESSENTIAL+', data:'16 GB', minutes:'3500', price:575},
+    {id:'redadvance',   name:'RED ADVANCE+',   data:'32 GB', minutes:'6000', price:980},
+    {id:'redprime',     name:'RED PRIME+',     data:'50 GB', minutes:'8000', price:1380},
+    {id:'redelite',     name:'RED ELITE+',     data:'85 GB', minutes:'10000', price:2000},
+    {id:'redexclusive', name:'RED EXCLUSIVE',  data:'200 GB', minutes:'11000', price:3450}
+  ];
+  proPlan.innerHTML = plans.map(p =>
+    '<option value="' + p.id + '">' + esc(p.name) + ' — ' + esc(p.data) + ' / ' + esc(String(p.minutes).replace(/,/g,'')) + ' min</option>'
+  ).join('');
+  proPlan.addEventListener('change', calcPro);
+}
+function proPlanData(){
+  const id = proPlan.value;
+  const live = (window.VF_LIVE && window.VF_LIVE.data && window.VF_LIVE.data.redPlans) || [];
+  const p = live.find(x => x.id === id) || null;
+  const mins = parseInt(String(p ? p.minutes : '').replace(/,/g,'')) || 0;
+  const gbs = parseFloat(String(p ? p.data : '').replace(/,/g,'')) || 0;
+  const price = p ? p.price : 0;
+  return { id, mins, gbs, price, sms: RED_SMS_QUOTA[id] || 0 };
+}
+/* next renewal date on/after a given date for a given cycle day (1/4/16) */
+function nextRenewal(from, day){
+  let d = new Date(from.getFullYear(), from.getMonth(), day);
+  if(d < from) d = new Date(from.getFullYear(), from.getMonth() + 1, day);
+  return d;
+}
+function calcPro(){
+  const r = proResult;
+  if(!proDate.value){
+    r.classList.remove('show');
+    document.getElementById('proHeadAr').textContent = '— قم بإدخال تاريخ الاشتراك';
+    return;
+  }
+  const sub = new Date(proDate.value + 'T12:00:00');
+  if(isNaN(sub)){ r.classList.remove('show'); return; }
+  const today = new Date(); today.setHours(12,0,0,0);
+
+  // billing renewal day: manual selection or auto-assign nearest upcoming from the subscription date
+  let cycleDay;
+  if(proCycle.value === 'auto'){
+    const upcoming = CYCLES.map(c => nextRenewal(sub, c));
+    upcoming.sort((a,b) => a - b);
+    cycleDay = upcoming[0].getDate();
+    document.getElementById('proCycle').title = 'Auto-assigned: day ' + cycleDay + ' / التخصيص التلقائي: يوم ' + cycleDay;
+  } else {
+    cycleDay = parseInt(proCycle.value);
+  }
+
+  // renewal from the subscription date's perspective
+  const renew = nextRenewal(sub, cycleDay);
+  let days = Math.round((renew - sub) / 86400000);
+  if(days <= 0){ // subscribed on/after the renewal moment -> full cycle ahead
+    days = 30;
+  }
+
+  const pd = proPlanData();
+  const minsOut = Math.floor(pd.mins / 30 * days);
+  const mbsOut = pd.gbs * 1024 / 30 * days;
+  const smsOut = Math.floor(pd.sms / 30 * days);
+
+  // Arabic-Indic display for sub-values
+  const arNum = n => n.toLocaleString('ar-EG');
+
+  document.getElementById('proDays').textContent = days;
+  document.getElementById('proDaysSub').innerHTML =
+    sub.toLocaleDateString('en-GB') + ' → ' + renew.toLocaleDateString('en-GB') +
+    ' <span class="ar">' + arNum(days) + ' يوم من ' + sub.toLocaleDateString('ar-EG') + ' لـ ' + renew.toLocaleDateString('ar-EG') + '</span>';
+
+  // dynamic result header
+  document.getElementById('proHeadAr').textContent =
+    arNum(days) + ' يوم متبقي — من ' + sub.toLocaleDateString('ar-EG') + ' حتى ' + renew.toLocaleDateString('ar-EG');
+
+  document.getElementById('proMins').textContent = minsOut.toLocaleString('en-US');
+  document.getElementById('proMinsSub').innerHTML = arNum(minsOut) + ' <span class="ar">دقيقة</span>';
+
+  const gbOut = mbsOut / 1024;
+  document.getElementById('proData').textContent = Math.round(mbsOut).toLocaleString('en-US') + ' MB';
+  document.getElementById('proDataSub').innerHTML =
+    (gbOut >= 1 ? gbOut.toFixed(2) + ' GB' : Math.round(mbsOut) + ' MB') +
+    ' <span class="ar">' + (gbOut >= 1 ? arNum(+gbOut.toFixed(2)) + ' جيجا' : arNum(Math.round(mbsOut)) + ' ميجا') + '</span>';
+
+  document.getElementById('proSms').textContent = smsOut.toLocaleString('en-US');
+  document.getElementById('proSmsSub').innerHTML = arNum(smsOut) + ' <span class="ar">رسالة</span>';
+
+  document.getElementById('proFull').textContent =
+    pd.mins.toLocaleString('en-US') + ' min • ' + pd.gbs + ' GB • ' + pd.sms + ' SMS';
+  document.getElementById('proFormula').innerHTML =
+    'quota ÷ 30 × ' + days + ' days<span class="ar" dir="rtl"> — الباقة ÷ ٣٠ × ' + arNum(days) + ' يوم</span>';
+
+  if(pd.price > 0){
+    const fee = pd.price / 30 * days;
+    document.getElementById('proFeeRow').style.display = 'flex';
+    document.getElementById('proFee').textContent =
+      fee.toFixed(2) + ' EGP (of ' + pd.price + ')';
+  }
+  document.getElementById('proNext').textContent =
+    renew.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'}) +
+    ' (day ' + cycleDay + ')';
+
+  // hint under plan selector
+  document.getElementById('proPlanHint').textContent =
+    'Quotas: ' + pd.mins.toLocaleString('en-US') + ' min, ' + pd.gbs + ' GB, ' + pd.sms + ' SMS — ' +
+    (pd.price ? 'EGP ' + pd.price + '/month tax-exclusive' : '');
+
+  r.classList.add('show');
+}
+proFillPlans();
+proDate.addEventListener('input', calcPro);
+proCycle.addEventListener('change', calcPro);
+if(!proDate.value){ proDate.valueAsDate = new Date(); }
+
+/* ============ NET BALANCE CALCULATOR ============
+   Egypt top-up: Net = Paid × 0.70, Paid = Net ÷ 0.70 */
+const NET_RATE = 0.70;
+const paidIn = document.getElementById('paidAmount');
+const netIn = document.getElementById('netBalance');
+const nbRes = document.getElementById('netResult');
+
+function fmtNB(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' EGP'; }
+
+function calcNet(){
+  const paid = parseFloat(paidIn.value);
+  const net = parseFloat(netIn.value);
+  nbRes.classList.remove('show');
+
+  if(!isNaN(paid) && paid >= 0 && (isNaN(net) || net < 0)){
+    // paid → net
+    const n = paid * NET_RATE;
+    const fee = paid - n;
+    document.getElementById('nbPaid').textContent = fmtNB(paid);
+    document.getElementById('nbNet').textContent = fmtNB(n);
+    document.getElementById('nbFee').textContent = fmtNB(fee);
+    nbRes.classList.add('show');
+  } else if(!isNaN(net) && net >= 0 && (isNaN(paid) || paid < 0)){
+    // net → paid
+    const p = net / NET_RATE;
+    const fee = p - net;
+    document.getElementById('nbPaid').textContent = fmtNB(p);
+    document.getElementById('nbNet').textContent = fmtNB(net);
+    document.getElementById('nbFee').textContent = fmtNB(fee);
+    nbRes.classList.add('show');
+  }
+}
+
+function handleNetInput(source){
+  if(source === 'paid'){
+    if(!netIn.value || netIn.value === '') calcNet();
+  } else {
+    if(!paidIn.value || paidIn.value === '') calcNet();
+  }
+}
+paidIn.addEventListener('input', () => handleNetInput('paid'));
+netIn.addEventListener('input', () => handleNetInput('net'));
+paidIn.addEventListener('blur', calcNet);
+netIn.addEventListener('blur', calcNet);
+
+/* ============ BILL VALIDITY CALCULATOR ============
+   Based on Vodafone Egypt Collection Timeline:
+   • Semi-HL Date = Bill Date + Time Line
+   • Max Deal Date = Siebel Due Date + Deal Days
+   • Time Line & Deal Days from lookup by Segment & Bill Day (16/21)
+   • Line Suspended if Today > Max Deal Date
+   • Max deferral = Deal Days
+   Lookup table from Vodafone Egypt Collection Timeline (Bill Day 16/21 + Segment) */
+const BV_LOOKUP = {
+  // Bill Day 21 segments
+  '21-Platinum':      { timeline: 41, dealDays: 7 },
+  '21-Premium BC1':   { timeline: 38, dealDays: 7 },
+  '21-Premium BC2':   { timeline: 36, dealDays: 7 },
+  '21-Premium BC4':   { timeline: 21, dealDays: 7 },
+  '21-High':          { timeline: 21, dealDays: 5 },
+  '21-Mass':          { timeline: 21, dealDays: 2 },
+  // Bill Day 16 segments
+  '16-Pure Easy':     { timeline: 16, dealDays: 2 },
+  '16-Platinum':      { timeline: 16, dealDays: 7 },
+  '16-Premium BC1':   { timeline: 16, dealDays: 7 },
+  '16-Premium BC2':   { timeline: 16, dealDays: 7 },
+  '16-Premium BC4':   { timeline: 16, dealDays: 7 },
+  '16-High':          { timeline: 16, dealDays: 5 },
+  '16-Mass':          { timeline: 16, dealDays: 2 }
+};
+
+const bvDate = document.getElementById('bvBillDate');
+const bvDue = document.getElementById('bvDueDate');
+const bvSeg = document.getElementById('bvSegment');
+const bvRes = document.getElementById('bvResult');
+
+function addDays(date, days){
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function fmtDate(d){
+  return d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+}
+function fmtDateAr(d){
+  return d.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'});
+}
+function fmtDateFull(d){
+  return d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+
+function calcBillValidity(){
+  bvRes.classList.remove('show');
+  if(!bvDate.value || !bvDue.value || !bvSeg.value) return;
+
+  const bill = new Date(bvDate.value + 'T12:00:00');
+  const due = new Date(bvDue.value + 'T12:00:00');
+  const today = new Date(); today.setHours(12,0,0,0);
+  const seg = bvSeg.value;
+
+  const billDay = bill.getDate() === 16 ? 16 : 21;
+  const key = billDay + '-' + seg;
+  const lu = BV_LOOKUP[key] || { timeline: 0, dealDays: 0 };
+
+  const timeline = lu.timeline;
+  const dealDays = lu.dealDays;
+
+  const semiHL = addDays(bill, timeline);
+  const maxDeal = addDays(due, dealDays);
+  const suspended = today > maxDeal;
+  const maxDeferral = dealDays;
+
+  // Output
+  document.getElementById('bvOutBillDate').textContent = fmtDate(bill);
+  document.getElementById('bvOutDueDate').textContent = fmtDate(due);
+  document.getElementById('bvOutSegment').textContent = bvSeg.value;
+  document.getElementById('bvOutBillDay').textContent = billDay;
+
+  document.getElementById('bvSemiHL').innerHTML =
+    fmtDate(semiHL) + ' <span class="ar">' + fmtDateAr(semiHL) + '</span>';
+  document.getElementById('bvMaxDeal').innerHTML =
+    fmtDate(maxDeal) + ' <span class="ar">' + fmtDateAr(maxDeal) + '</span>';
+
+  document.getElementById('bvTimeline').innerHTML =
+    timeline + ' days <span class="ar">' + timeline + ' يوم</span>';
+  document.getElementById('bvDealDays').innerHTML =
+    dealDays + ' days <span class="ar">' + dealDays + ' يوم</span>';
+
+  const statusIcon = document.getElementById('bvStatusIcon');
+  const statusText = document.getElementById('bvStatusText');
+  if(suspended){
+    statusIcon.textContent = '🔴 ';
+    statusText.textContent = 'SUSPENDED / معلق';
+    statusText.style.color = '#fca5a5';
+  }else{
+    statusIcon.textContent = '🟢 ';
+    statusText.textContent = 'ACTIVE / نشط';
+    statusText.style.color = '#86efac';
+  }
+
+  document.getElementById('bvMaxDeferral').textContent = maxDeferral + ' days';
+  document.getElementById('bvMaxDeferral').nextElementSibling?.textContent; // dummy
+
+  const deferralRow = document.getElementById('bvDeferralRow');
+  const msgRow = document.getElementById('bvMsgRow');
+  if(dealDays > 0){
+    document.getElementById('bvMaxDeferral').textContent = dealDays + ' days / ' + dealDays + ' يوم';
+    deferralRow.style.display = 'flex';
+    document.getElementById('bvMsg').textContent =
+      'If customer requests longer deferral, refer to 881 / لو العميل طلب مدة تأجيل أطول، أطلب منه الرجوع لـ 881';
+    msgRow.style.display = 'flex';
+  }else{
+    deferralRow.style.display = 'none';
+    msgRow.style.display = 'none';
+  }
+
+  bvRes.classList.add('show');
+}
+
+const bvDateEl = document.getElementById('bvBillDate');
+const bvDueEl = document.getElementById('bvDueDate');
+const bvSegEl = document.getElementById('bvSegment');
+if(bvDateEl && bvDueEl && bvSegEl){
+  bvDateEl.addEventListener('input', calcBillValidity);
+  bvDueEl.addEventListener('input', calcBillValidity);
+  bvSegEl.addEventListener('change', calcBillValidity);
+  // Default to today
+  const today = new Date();
+  const dd = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  if(!bvDateEl.value) bvDateEl.value = dd;
+  if(!bvDueEl.value) bvDueEl.value = dd;
+  calcBillValidity();
+}
+
+// Also run on DOM ready in case scripts load before DOM
+document.addEventListener('DOMContentLoaded', () => {
+  if(bvDateEl && bvDueEl && bvSegEl){
+    if(!bvDateEl.value) bvDateEl.value = dd;
+    if(!bvDueEl.value) bvDueEl.value = dd;
+    calcBillValidity();
+  }
+  // Net balance init
+  if(paidIn && netIn){
+    if(!paidIn.value && !netIn.value){
+      // No initial calculation needed
+    }
+  }
+});
+
+/* ============ FAQ RENDER ============ */
+const faqList = document.getElementById('faqList');
+const faqSearch = document.getElementById('faqSearch');
+const faqCount = document.getElementById('faqCount');
+function catOf(q){
+  const t = q + ' ' + norm(q);
+  if(/dsl|راوتر|الأرضي|الارضي|هوائي|wireless/.test(t)) return 'DSL';
+  if(/ريد|red/.test(t)) return 'RED';
+  if(/كاش|محفظة|cash|wallet/.test(t)) return 'Cash';
+  if(/تجوال|دولي|roaming|international/.test(t)) return 'Intl';
+  if(/فليكس|flex/.test(t)) return 'Flex';
+  if(/شكرا|نقاط|نقط|points|مكاف/.test(t)) return 'Shokran';
+  if(/usb|مودم/.test(t)) return 'Devices';
+  if(/فاتورة|bill/.test(t)) return 'Bill';
+  return 'General';
+}
+const FAQS = [];
+for(let i=0; i<FAQ_RAW.length; i+=2){
+  if(i+1 < FAQ_RAW.length && FAQ_RAW[i].startsWith('Q:')){
+    FAQS.push({q: FAQ_RAW[i].slice(3), a: FAQ_RAW[i+1].slice(3), cat: catOf(FAQ_RAW[i])});
+  }
+}
+document.getElementById('statFaq').textContent = FAQS.length;
+function renderFaq(){
+  const q = faqSearch.value.trim();
+  const nq = norm(q);
+  const list = FAQS.filter(f=> !nq || norm(f.q).includes(nq) || norm(f.a).includes(nq));
+  faqCount.textContent = list.length + ' / ' + FAQS.length;
+  faqList.innerHTML = list.map(f=>`
+    <details>
+      <summary>${esc(f.q)} <span class="faq-cat">${f.cat}</span></summary>
+      <div class="faq-body ar" dir="rtl">${esc(f.a)}</div>
+    </details>`).join('');
+}
+faqSearch.addEventListener('input', renderFaq);
+renderFaq();
+
+/* ============ LIVE AUTO-SYNC OVERLAY ============
+   Applies window.VF_LIVE (fetched by sync/sync.js from vodafone.com.eg)
+   on top of the static tables — never rewrites them structurally. */
+(function applyLive(){
+  const L = window.VF_LIVE;
+  const stamp = document.getElementById('statSync');
+  if(!L || !L.meta){ stamp.textContent = 'off'; stamp.style.color = '#d6d3d1'; return; }
+  // status chip
+  const d = new Date(L.meta.lastSync);
+  stamp.textContent = d.toLocaleDateString('en-GB');
+  stamp.title = 'Last auto-sync from vodafone.com.eg / آخر مزامنة من موقع فودافون';
+
+  // --- 1. RED plans: patch price/data/minutes cells by plan keyword ---
+  const RED_ROWS = [
+    {key:'redessential', row:'RED Essential+'},
+    {key:'redadvance',   row:'RED Advance+'},
+    {key:'redprime',     row:'RED Prime+'},
+    {key:'redelite',     row:'RED Elite+'},
+    {key:'redexclusive', row:'RED Exclusive'}
+  ];
+  let redPatched = 0;
+  (L.data.redPlans || []).forEach(p => {
+    const row = RED_ROWS.find(r => p.id === r.key);
+    if(!row) return;
+    const cell = [...document.querySelectorAll('#plans table td b')].find(b => b.textContent.trim() === row.row);
+    if(!cell) return;
+    const tr = cell.closest('tr');
+    if(!tr) return;
+    const tds = [...tr.querySelectorAll('td')];
+    // td layout: [plan, data, minutes, price, perks]
+    const num = s => String(s).replace(/[,\s]/g,'');
+    if(tds[1] && p.data){
+      const gb = parseInt(p.data);
+      if(!num(tds[1].textContent).includes(num(p.data.split(' ')[0]))){
+        tds[1].innerHTML = esc(p.data) + '<span class="ar">' + gb.toLocaleString('ar-EG') + ' جيجا</span>';
+      }
+    }
+    if(tds[2] && p.minutes){
+      const mins = parseInt(String(p.minutes).replace(/,/g,''));
+      if(!num(tds[2].textContent).includes(String(mins))){
+        tds[2].innerHTML = esc(String(p.minutes)) + '<span class="ar">' + mins.toLocaleString('ar-EG') + ' دقيقة</span>';
+      }
+    }
+    if(tds[3]){
+      tds[3].innerHTML = '<b>' + esc(p.price) + '</b><span class="ar">' + p.price.toLocaleString('ar-EG') + ' جنيه</span>';
+      redPatched++;
+    }
+  });
+
+  // --- 2. Plus bundles: patch the 8-row Plus table ---
+  // Match by current label first; if Vodafone renamed a bundle (e.g. Plus 37 → Plus 42),
+  // fall back to matching by quota (megas) so renamed rows still get updated.
+  let plusPatched = 0;
+  const plusRows = [...document.querySelectorAll('#plans table tr')].filter(tr => {
+    const first = tr.querySelector('td');
+    const txt = (first && first.textContent) ? first.textContent.trim() : '';
+    return txt.indexOf('Plus ') === 0;
+  });
+  const usedRows = new Set();
+  (L.data.plusBundles || []).filter(b => !b.app).forEach(b => {
+    let tr = plusRows.find(r => !usedRows.has(r) && (r.querySelector('td').textContent || '').indexOf('Plus ' + b.price + 'ب') === 0);
+    if(!tr) tr = plusRows.find(r => !usedRows.has(r) && (r.querySelector('td').textContent || '').indexOf('Plus ' + b.price) === 0);
+    if(!tr && b.megas){ // renamed bundle: match row whose OLD quota equals new MBs is wrong when quota also changed — match by ordinal position instead
+      const idx = (L.data.plusBundles || []).filter(x => !x.app).indexOf(b);
+      if(plusRows[idx] && !usedRows.has(plusRows[idx])) tr = plusRows[idx];
+    }
+    if(!tr) return;
+    usedRows.add(tr);
+    const tds = tr.querySelectorAll('td');
+    if(tds[1]) tds[1].innerHTML = esc(b.price) + ' EGP<span class="ar">' + b.price.toLocaleString('ar-EG') + ' جنيه</span>';
+    if(tds[0]) tds[0].innerHTML = 'Plus ' + esc(b.price) + '<span class="ar">بلس ' + b.price.toLocaleString('ar-EG') + '</span>';
+    if(tds[2] && b.megas){
+      const gbTxt = b.megas >= 1000 ? (b.megas/1000).toLocaleString('en-US') + ' GB' : b.megas + ' MB';
+      tds[2].innerHTML = esc(b.megas.toLocaleString('en-US') + ' MB') + '<span class="ar">' + b.megas.toLocaleString('ar-EG') + ' ميجا (' + gbTxt + ')</span>';
+    }
+    plusPatched++;
+  });
+
+  // --- 3. Code presence checks: badge verified codes ---
+  let okCodes = 0, totalCodes = 0;
+  const checks = [];
+  const cc = (L.data.codeChecks || {});
+  (cc.cash || []).concat(cc.kart || []).forEach(c => {
+    checks.push(c); if(c.present) okCodes++; totalCodes++;
+  });
+  if(checks.length){
+    console.log('[sync] verified codes ' + okCodes + '/' + totalCodes);
+  }
+  console.log('[sync] live overlay applied: RED ' + redPatched + ' rows, Plus ' + plusPatched + ' rows');
+})();
+
+/* ============ FAQ RENDER GUARD ============ */
+/* FAQ answers containing "\n" now render as line breaks (white-space:pre-wrap is already set) */
+function renderFaqSafe(){
+  const list = faqList.querySelectorAll('.faq-body');
+  list.forEach(b => { b.textContent = b.textContent.replace(/\\n/g, '\n'); });
+}
+renderFaqSafe();
+</script>
+</body>
+</html>

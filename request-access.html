@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request Access — Vodafone Assistant / طلب الدخول</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Cairo',sans-serif;background:#f6f7fb;color:#141414;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:2rem;max-width:480px;width:100%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.logo{width:52px;height:52px;background:#e60000;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:1.3rem;margin:0 auto 1rem}
+h1{font-size:1.3rem;margin-bottom:.4rem}
+.ar{font-family:'Cairo',sans-serif}
+p{color:#6b7280;font-size:.92rem;line-height:1.7;margin-bottom:1rem}
+.code{font-size:2.4rem;font-weight:800;letter-spacing:.35em;color:#e60000;background:#faf5f5;border:2px dashed #e60000;border-radius:12px;padding:.6rem 1rem .6rem 1.4rem;margin:1rem 0;direction:ltr;user-select:all}
+.btn{background:#e60000;color:#fff;border:none;border-radius:10px;padding:.75rem 1.4rem;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;width:100%;margin-top:.6rem}
+.btn.ghost{background:#f3f4f6;color:#141414}
+.status{margin-top:1rem;font-size:.9rem;font-weight:600}
+.status.ok{color:#0a7d34}.status.wait{color:#b8860b}.status.err{color:#e60000}
+.small{font-size:.78rem;color:#9ca3af;margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">VF</div>
+  <h1>Request Access <span class="ar">/ طلب الدخول</span></h1>
+  <p>This tool is private. Send your code below to the admin to get access.
+  <span class="ar" style="display:block">الأداة خاصة. ابعت الكود اللي تحت للمسؤول عشان يفعّل لك الدخول.</span></p>
+  <div class="code" id="code">······</div>
+  <button class="btn ghost" onclick="copyCode()">Copy code / نسخ الكود</button>
+  <button class="btn" onclick="checkStatus(true)">I've been approved — check again / اتوافق عليّا — تحقق</button>
+  <div class="status wait" id="status">Waiting for admin approval… / في انتظار موافقة المسؤول…</div>
+  <div class="small">Your code is saved on this device. Codes expire after 7 days if unused.</div>
+</div>
+<script>
+const KEY = 'vf_access_token';
+async function ensureCode(){
+  let t = localStorage.getItem(KEY);
+  if(t){ document.getElementById('code').textContent = t; return t; }
+  try{
+    const r = await fetch('/api/request-access', {method:'POST'});
+    const d = await r.json();
+    if(d.code){ localStorage.setItem(KEY, d.code); document.getElementById('code').textContent = d.code; return d.code; }
+    document.getElementById('status').textContent = 'Could not issue code. Try again later.';
+    document.getElementById('status').className = 'status err';
+  }catch(e){
+    document.getElementById('status').textContent = 'Network error. Try again later.';
+    document.getElementById('status').className = 'status err';
+  }
+  return null;
+}
+function copyCode(){
+  const c = document.getElementById('code').textContent;
+  if(navigator.clipboard) navigator.clipboard.writeText(c);
+}
+async function checkStatus(loud){
+  const t = localStorage.getItem(KEY);
+  if(!t) return;
+  try{
+    const r = await fetch('/api/check-access?token=' + encodeURIComponent(t));
+    const d = await r.json();
+    if(d.allowed){ location.replace('/'); return; }
+    if(loud){
+      const s = document.getElementById('status');
+      s.textContent = d.pending ? 'Still pending — ask the admin to approve your code. / لسه معلق — خلي المسؤول يوافق على كودك.' : 'Code not found — requesting a new one… / الكود مش موجود — بنطلع واحد جديد…';
+      s.className = 'status wait';
+      if(!d.pending){ localStorage.removeItem(KEY); ensureCode(); }
+    }
+  }catch(e){}
+}
+ensureCode().then(()=>checkStatus(false));
+setInterval(()=>checkStatus(false), 15000);
+</script>
+</body>
+</html>
