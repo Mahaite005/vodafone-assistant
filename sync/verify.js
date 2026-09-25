@@ -134,6 +134,28 @@ ok(!fs.existsSync(path.join(ROOT, 'request-access.html')), 'request-access.html 
 ok(!fs.existsSync(path.join(ROOT, 'admin.html')), 'admin.html removed');
 ok(!/ACCESS GATE/.test(html), 'no access gate in index.html');
 
+// 10b. Supabase auth (public anon key only — never service_role in repo)
+ok(fs.existsSync(path.join(ROOT, 'supabase-config.js')), 'supabase-config.js exists');
+const cfgSrc = fs.readFileSync(path.join(ROOT, 'supabase-config.js'), 'utf8');
+const cfgW = {};
+new Function('window', cfgSrc)(cfgW);
+const cfg = cfgW.VF_SUPABASE || {};
+ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(cfg.url || ''), 'supabase URL well-formed');
+ok(typeof cfg.anonKey === 'string' && cfg.anonKey.split('.').length === 3, 'supabase anon key present (JWT shape)');
+const repoText = cfgSrc + html;
+let svcFound = false;
+for (const m of repoText.matchAll(/eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g)) {
+  try {
+    const role = JSON.parse(Buffer.from(m[0].split('.')[1], 'base64').toString()).role;
+    if (role === 'service_role') svcFound = true;
+  } catch (e) { /* not a JWT — ignore */ }
+}
+ok(!svcFound, 'no service_role JWT anywhere in repo files');
+ok(/supabase-js@2/.test(html), 'supabase-js CDN loaded');
+ok(/id="authGate"/.test(html) && /id="authUser"/.test(html) && /id="userChip"/.test(html), 'auth overlay + user chip present');
+ok(/function initAuth/.test(html) && /onAuthStateChange/.test(html), 'auth module with session handling present');
+ok(/status === 'approved'/.test(html) && /applyFeatures/.test(html), 'approval gate + per-feature filtering present');
+
 // 11. Offers / discount calculator
 ok(html.indexOf('data-tab="offers"') !== -1, 'Offers tab present');
 ok(html.indexOf('id="offers"') !== -1, 'Offers section present');

@@ -137,6 +137,46 @@ footer .ar{display:block; color:#a8a29e}
 </head>
 <body>
 
+<div id="authGate" style="display:none; position:fixed; inset:0; z-index:200; background:rgba(15,15,20,.94); align-items:center; justify-content:center; padding:1rem; overflow-y:auto">
+  <div class="tool" style="max-width:430px; width:100%; margin:0">
+    <div id="authForm">
+      <h2>🔐 Vodafone Assistant <span class="ar">تسجيل الدخول</span></h2>
+      <p class="desc">Private tool — log in or create an account. New accounts need admin approval.
+        <span class="ar" style="display:block;margin-top:.3rem">أداة خاصة — سجّل الدخول أو اعمل حساب جديد. الحسابات الجديدة محتاجة موافقة المسؤول.</span></p>
+      <div class="chips" style="margin-bottom:1rem">
+        <button class="chip active" id="tabLogin" type="button">Login / دخول</button>
+        <button class="chip" id="tabSignup" type="button">Sign up / حساب جديد</button>
+      </div>
+      <div class="field" id="rowUser" style="display:none">
+        <label for="authUser">Username / اسم المستخدم</label>
+        <input id="authUser" type="text" maxlength="20" placeholder="e.g. agent_ahmed" autocomplete="off" style="direction:ltr">
+        <div class="hint">3–20 chars, letters/numbers/_ — must be unique / لازم يكون مميز</div>
+      </div>
+      <div class="field">
+        <label for="authEmail">Email / البريد</label>
+        <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" style="direction:ltr">
+      </div>
+      <div class="field">
+        <label for="authPass">Password / كلمة السر</label>
+        <input id="authPass" type="password" placeholder="••••••••" autocomplete="current-password" style="direction:ltr">
+      </div>
+      <div class="hint" id="authErr" style="color:#fca5a5; min-height:1.2em"></div>
+      <button class="tab active" id="authGo" type="button" style="width:100%; margin-top:.6rem">Login / دخول</button>
+    </div>
+    <div id="authStatus" style="display:none; text-align:center; padding:1rem 0">
+      <div style="font-size:2.4rem" id="authStatusIcon">⏳</div>
+      <h2 id="authStatusTitle" style="margin:.6rem 0"></h2>
+      <p class="desc" id="authStatusText"></p>
+      <button class="tab" id="authLogout2" type="button" style="margin-top:.8rem">Log out / خروج</button>
+    </div>
+  </div>
+</div>
+
+<div id="userChip" style="display:none; position:fixed; bottom:.8rem; left:.8rem; z-index:150; background:#141414; color:#fff; border:1px solid #444; border-radius:999px; padding:.35rem .35rem .35rem .9rem; font-size:.8rem; font-family:inherit; box-shadow:0 4px 14px rgba(0,0,0,.35)">
+  <span id="userName" style="font-weight:700"></span>
+  <button id="logoutBtn" type="button" style="margin-left:.5rem; border:1px solid #666; background:transparent; color:#ccc; border-radius:999px; padding:.25rem .7rem; font-size:.75rem; cursor:pointer; font-family:inherit">logout / خروج</button>
+</div>
+
 <header>
   <div class="hw">
     <div class="brand">
@@ -631,6 +671,8 @@ footer .ar{display:block; color:#a8a29e}
 
 
 <script src="live-data.js" onerror="window.VF_LIVE=null"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 /* ============ CODES DATABASE ============
    USSD placeholders use [number]/[amount]/[code] brackets.
@@ -1411,6 +1453,149 @@ calcRenew();
     console.log('[sync] verified codes ' + okCodes + '/' + totalCodes);
   }
   console.log('[sync] live overlay applied: RED ' + redPatched + ' rows, Plus ' + plusPatched + ' rows');
+})();
+
+/* ============ SUPABASE AUTH + APPROVAL GATING ============
+   Signup creates auth user + profiles row (status 'pending').
+   Admin approves in Supabase dashboard (profiles.status → 'approved',
+   optional per-user features list). Site hides on failure/offline. */
+(function initAuth(){
+  const gate = document.getElementById('authGate');
+  const cfg = window.VF_SUPABASE || {};
+  if(!window.supabase || !cfg.url || !cfg.anonKey){
+    if(gate) gate.style.display = 'none';
+    return; // lib/config missing (offline) → site stays open
+  }
+  const sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+  const TABS = ['codes','plans','tax','data','pro','netbalance','billvalidity','offers','renew'];
+  const form = document.getElementById('authForm');
+  const statusBox = document.getElementById('authStatus');
+  const errBox = document.getElementById('authErr');
+  const goBtn = document.getElementById('authGo');
+  const emailIn = document.getElementById('authEmail');
+  const passIn = document.getElementById('authPass');
+  const userIn = document.getElementById('authUser');
+  const rowUser = document.getElementById('rowUser');
+  const tabLogin = document.getElementById('tabLogin');
+  const tabSignup = document.getElementById('tabSignup');
+  let mode = 'login';
+
+  function setMode(m){
+    mode = m;
+    const signup = m === 'signup';
+    rowUser.style.display = signup ? 'block' : 'none';
+    tabLogin.classList.toggle('active', !signup);
+    tabSignup.classList.toggle('active', signup);
+    goBtn.textContent = signup ? 'Create account / إنشاء حساب' : 'Login / دخول';
+    errBox.textContent = '';
+  }
+  tabLogin.addEventListener('click', ()=>setMode('login'));
+  tabSignup.addEventListener('click', ()=>setMode('signup'));
+
+  function showGate(){ gate.style.display = 'flex'; form.style.display = 'block'; statusBox.style.display = 'none'; }
+  function showStatus(icon, title, text){
+    gate.style.display = 'flex'; form.style.display = 'none'; statusBox.style.display = 'block';
+    document.getElementById('authStatusIcon').textContent = icon;
+    document.getElementById('authStatusTitle').textContent = title;
+    document.getElementById('authStatusText').textContent = text;
+  }
+  function hideGate(){ gate.style.display = 'none'; }
+
+  function showChip(name){
+    document.getElementById('userName').textContent = name;
+    document.getElementById('userChip').style.display = 'block';
+  }
+  function hideChip(){ document.getElementById('userChip').style.display = 'none'; }
+
+  // hide tabs/sections outside the granted feature list (empty list = full access)
+  function applyFeatures(features){
+    if(!features || !features.length) return;
+    const allow = new Set(features);
+    TABS.forEach(t => {
+      if(allow.has(t)) return;
+      const btn = document.querySelector('.tab[data-tab="' + t + '"]');
+      const sec = document.getElementById(t);
+      if(btn) btn.style.display = 'none';
+      if(sec) sec.style.display = 'none';
+    });
+    const activeBtn = document.querySelector('.tab.active');
+    if(activeBtn && activeBtn.style.display === 'none'){
+      const first = TABS.map(t => document.querySelector('.tab[data-tab="' + t + '"]')).find(b => b && b.style.display !== 'none');
+      if(first) first.click();
+    }
+  }
+
+  async function ensureProfile(user){
+    const sel = await sb.from('profiles').select('username,status,features').eq('id', user.id).maybeSingle();
+    if(sel.data) return { profile: sel.data };
+    const metaName = user.user_metadata && user.user_metadata.username;
+    const fallback = (user.email || 'user').split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_').slice(0, 20) || 'user';
+    const username = metaName || fallback;
+    const ins = await sb.from('profiles').insert({id: user.id, username, status: 'pending', features: []});
+    if(ins.error){
+      if(ins.error.code === '23505') return { taken: true };
+      return { error: ins.error.message };
+    }
+    return { profile: { username, status: 'pending', features: [] } };
+  }
+
+  async function render(user){
+    if(!user){ hideChip(); setMode('login'); showGate(); return; }
+    const r = await ensureProfile(user);
+    if(r.taken){
+      await sb.auth.signOut(); hideChip(); setMode('login'); showGate();
+      errBox.textContent = 'Username already taken — sign up again with a different username. / الاسم مستخدم — سجّل بحساب واسم مختلف.';
+      return;
+    }
+    if(r.error){
+      showStatus('⚠️', 'Profile error / خطأ', r.error);
+      return;
+    }
+    const p = r.profile;
+    if(p.status === 'approved'){
+      hideGate(); showChip(p.username); applyFeatures(p.features);
+    } else if(p.status === 'rejected'){
+      hideChip();
+      showStatus('⛔', 'Access rejected / تم الرفض', 'Your account (' + p.username + ') was rejected by the admin. Contact them for details. / حسابك اترفض من المسؤول. تواصل معاه للتفاصيل.');
+    } else {
+      hideChip();
+      showStatus('⏳', 'Pending approval / قيد المراجعة', 'Account "' + p.username + '" is waiting for admin approval. You will get in once approved — just log in again. / حسابك مستني موافقة المسؤول. سجّل الدخول تاني بعد الموافقة.');
+    }
+  }
+
+  const validUser = v => /^[a-zA-Z0-9_]{3,20}$/.test(v);
+
+  goBtn.addEventListener('click', async () => {
+    errBox.textContent = '';
+    const email = emailIn.value.trim(), pass = passIn.value;
+    if(!email || !pass){ errBox.textContent = 'Enter email and password. / اكتب البريد وكلمة السر.'; return; }
+    goBtn.disabled = true;
+    try{
+      if(mode === 'signup'){
+        const username = userIn.value.trim();
+        if(!validUser(username)){ errBox.textContent = 'Username: 3–20 chars, letters/numbers/_ only. / اسم من ٣–٢٠ حرف وأرقام و _ بس.'; goBtn.disabled = false; return; }
+        const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { username } } });
+        if(error){ errBox.textContent = error.message; goBtn.disabled = false; return; }
+        if(!data.session){
+          showStatus('📧', 'Check your email / راجع بريدك', 'Confirm your email, then log in here. Your account will wait for admin approval. / أكّد بريدك وبعدين سجّل الدخول هنا. حسابك هيستنى موافقة المسؤول.');
+          goBtn.disabled = false; return;
+        }
+        render(data.session.user);
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+        if(error){ errBox.textContent = error.message; goBtn.disabled = false; return; }
+        render(data.user);
+      }
+    }catch(e){ errBox.textContent = 'Network error — try again. / مشكلة شبكة — حاول تاني.'; }
+    goBtn.disabled = false;
+  });
+
+  async function logout(){ await sb.auth.signOut(); hideChip(); setMode('login'); showGate(); }
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+  document.getElementById('authLogout2').addEventListener('click', logout);
+
+  sb.auth.onAuthStateChange((_ev, session) => render(session && session.user ? session.user : null));
+  sb.auth.getSession().then(({ data }) => render(data.session && data.session.user ? data.session.user : null));
 })();
 
 </script>
