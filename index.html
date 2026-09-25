@@ -143,12 +143,11 @@ footer .ar{display:block; color:#a8a29e}
       <div class="logo">VF</div>
       <div>
         <h1>Vodafone Egypt Assistant</h1>
-        <div class="tag">Call-center companion — codes, bundles, FAQs, tax &amp; data tools</div>
+        <div class="tag">Call-center companion — codes, bundles, tax &amp; data tools</div>
       </div>
     </div>
     <div class="stats">
       <div class="stat"><b id="statCodes">0</b><span>Codes &amp; Numbers / كود ورقم</span></div>
-      <div class="stat"><b id="statFaq">0</b><span>FAQs / سؤال شائع</span></div>
       <div class="stat"><b id="statTools">3</b><span>Tools / أدوات</span></div>
       <div class="stat"><b id="statSync" style="color:#86efac">—</b><span>Live sync / مزامنة تلقائية</span></div>
     </div>
@@ -158,7 +157,7 @@ footer .ar{display:block; color:#a8a29e}
 <nav>
   <button class="tab active" data-tab="codes">🔑 Codes <span class="ar" style="font-size:.8rem">الأكواد والأرقام</span></button>
   <button class="tab" data-tab="plans">📦 Plans <span class="ar" style="font-size:.8rem">الأنظمة والباقات</span></button>
-  <button class="tab" data-tab="faq">❓ FAQ <span class="ar" style="font-size:.8rem">الأسئلة الشائعة</span></button>
+  <button class="tab" data-tab="renew">📅 Renewal <span class="ar" style="font-size:.8rem">الأيام حتى الفاتورة</span></button>
   <button class="tab" data-tab="tax">🧮 Tax <span class="ar" style="font-size:.8rem">حاسبة الضرائب</span></button>
   <button class="tab" data-tab="data">📊 Data <span class="ar" style="font-size:.8rem">محوّل البيانات</span></button>
   <button class="tab" data-tab="pro">⏳ Pro-Rata <span class="ar" style="font-size:.8rem">حاسبة الباقة الجزئية</span></button>
@@ -302,15 +301,34 @@ footer .ar{display:block; color:#a8a29e}
   </table></div>
 </section>
 
-<section id="faq">
-  <div class="searchwrap" style="position:sticky">
-    <div class="searchbox">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="faqSearch" type="text" placeholder='Search FAQs — Arabic or English / ابحث في الأسئلة الشائعة بالعربي أو الإنجليزي' autocomplete="off">
-      <span class="count" id="faqCount"></span>
+<section id="renew">
+  <div class="tool">
+    <h2>📅 Days Remaining Until Renewal <span class="ar">الأيام المتبقية حتى الفاتورة الجديدة</span></h2>
+    <p class="desc">Pick a date from the calendar, then pick the invoice issuance day (1st, 4th or 16th of the month) — the exact days left until the new invoice is issued appear instantly.
+      <span class="ar" style="display:block;margin-top:.3rem">اختار التاريخ من التقويم، وبعدين اختار يوم إصدار الفاتورة (١ أو ٤ أو ١٦ من الشهر) — عدد الأيام المتبقية بالظبط حتى إصدار الفاتورة الجديدة بيظهر فوراً.</span></p>
+    <div class="dwrap">
+      <div class="field">
+        <label for="renDate">Date / التاريخ</label>
+        <input id="renDate" type="date">
+        <div class="hint">Pick any date from the calendar / اختار أي تاريخ من التقويم</div>
+      </div>
+      <div class="field">
+        <label for="renDay">Invoice issuance day / يوم إصدار الفاتورة</label>
+        <select id="renDay">
+          <option value="1">1st of month / يوم ١</option>
+          <option value="4">4th of month / يوم ٤</option>
+          <option value="16">16th of month / يوم ١٦</option>
+        </select>
+        <div class="hint">Vodafone issues on the 1st, 4th or 16th / الفاتورة بتصدر يوم ١ أو ٤ أو ١٦</div>
+      </div>
+    </div>
+    <div class="result" id="renResult">
+      <div class="rhead">Countdown / العد التنازلي</div>
+      <div class="rrow grand"><div class="lbl"><b>Days remaining</b> <span class="ar">الأيام المتبقية</span></div><div class="val" id="renDays">—</div></div>
+      <div class="rrow"><div class="lbl">Selected date <span class="ar">التاريخ المختار</span></div><div class="val" id="renRef">—</div></div>
+      <div class="rrow total"><div class="lbl">Next invoice date <span class="ar">تاريخ الفاتورة الجديدة</span></div><div class="val" id="renNext">—</div></div>
     </div>
   </div>
-  <div id="faqList"></div>
 </section>
 
 
@@ -612,7 +630,6 @@ footer .ar{display:block; color:#a8a29e}
 </footer>
 
 
-<script src="faq-data.js"></script>
 <script src="live-data.js" onerror="window.VF_LIVE=null"></script>
 <script>
 /* ============ CODES DATABASE ============
@@ -1266,42 +1283,44 @@ offPrice.addEventListener('input', calcOffer);
 offMonths.addEventListener('change', calcOffer);
 offDisc.addEventListener('change', calcOffer);
 
-/* ============ FAQ RENDER ============ */
-const faqList = document.getElementById('faqList');
-const faqSearch = document.getElementById('faqSearch');
-const faqCount = document.getElementById('faqCount');
-function catOf(q){
-  const t = q + ' ' + norm(q);
-  if(/dsl|راوتر|الأرضي|الارضي|هوائي|wireless/.test(t)) return 'DSL';
-  if(/ريد|red/.test(t)) return 'RED';
-  if(/كاش|محفظة|cash|wallet/.test(t)) return 'Cash';
-  if(/تجوال|دولي|roaming|international/.test(t)) return 'Intl';
-  if(/فليكس|flex/.test(t)) return 'Flex';
-  if(/شكرا|نقاط|نقط|points|مكاف/.test(t)) return 'Shokran';
-  if(/usb|مودم/.test(t)) return 'Devices';
-  if(/فاتورة|bill/.test(t)) return 'Bill';
-  return 'General';
+/* ============ RENEWAL COUNTDOWN ============
+   Days left from a picked date until the next invoice issuance day (1/4/16).
+   Same-day pick = 0 days (invoice issued that day). */
+const renDate = document.getElementById('renDate');
+const renDay = document.getElementById('renDay');
+const renResult = document.getElementById('renResult');
+
+(function renInit(){
+  const t = new Date();
+  renDate.value = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+})();
+
+function calcRenew(){
+  renResult.classList.remove('show');
+  if(!renDate.value) return;
+  const ref = new Date(renDate.value + 'T00:00:00');
+  if(isNaN(ref)) return;
+  const day = parseInt(renDay.value, 10) || 1;
+  let nxt = new Date(ref.getFullYear(), ref.getMonth(), day);
+  if(nxt < ref) nxt = new Date(ref.getFullYear(), ref.getMonth() + 1, day);
+  const days = Math.round((nxt - ref) / 86400000);
+  const fmtD = d => d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+  const arNum = n => Number(n).toLocaleString('ar-EG');
+  const AR = 'font-size:.78rem; font-weight:400; color:#d6d3d1';
+  const ord = {1:'1st', 4:'4th', 16:'16th'};
+
+  document.getElementById('renDays').innerHTML =
+    days + ' <span class="ar" style="' + AR + '">' + arNum(days) + ' يوم</span>';
+  document.getElementById('renRef').textContent = fmtD(ref);
+  document.getElementById('renNext').innerHTML =
+    fmtD(nxt) + ' <small style="color:#a8a29e">(' + ord[day] + ')</small>' +
+    ' <span class="ar" style="' + AR + '">' + nxt.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'}) + '</span>';
+
+  renResult.classList.add('show');
 }
-const FAQS = [];
-for(let i=0; i<FAQ_RAW.length; i+=2){
-  if(i+1 < FAQ_RAW.length && FAQ_RAW[i].startsWith('Q:')){
-    FAQS.push({q: FAQ_RAW[i].slice(3), a: FAQ_RAW[i+1].slice(3), cat: catOf(FAQ_RAW[i])});
-  }
-}
-document.getElementById('statFaq').textContent = FAQS.length;
-function renderFaq(){
-  const q = faqSearch.value.trim();
-  const nq = norm(q);
-  const list = FAQS.filter(f=> !nq || norm(f.q).includes(nq) || norm(f.a).includes(nq));
-  faqCount.textContent = list.length + ' / ' + FAQS.length;
-  faqList.innerHTML = list.map(f=>`
-    <details>
-      <summary>${esc(f.q)} <span class="faq-cat">${f.cat}</span></summary>
-      <div class="faq-body ar" dir="rtl">${esc(f.a)}</div>
-    </details>`).join('');
-}
-faqSearch.addEventListener('input', renderFaq);
-renderFaq();
+renDate.addEventListener('input', calcRenew);
+renDay.addEventListener('change', calcRenew);
+calcRenew();
 
 /* ============ LIVE AUTO-SYNC OVERLAY ============
    Applies window.VF_LIVE (fetched by sync/sync.js from vodafone.com.eg)
@@ -1394,13 +1413,6 @@ renderFaq();
   console.log('[sync] live overlay applied: RED ' + redPatched + ' rows, Plus ' + plusPatched + ' rows');
 })();
 
-/* ============ FAQ RENDER GUARD ============ */
-/* FAQ answers containing "\n" now render as line breaks (white-space:pre-wrap is already set) */
-function renderFaqSafe(){
-  const list = faqList.querySelectorAll('.faq-body');
-  list.forEach(b => { b.textContent = b.textContent.replace(/\\n/g, '\n'); });
-}
-renderFaqSafe();
 </script>
 </body>
 </html>

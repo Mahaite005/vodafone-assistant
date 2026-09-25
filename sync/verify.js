@@ -5,16 +5,31 @@ const path = require('path');
 const ROOT = 'C:/Users/Elostaz/Documents/Default Project/vodafone-assistant';
 let fails = 0;
 const ok = (cond, msg) => { console.log((cond ? 'PASS' : 'FAIL') + ' — ' + msg); if(!cond) fails++; };
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 
-// 1. faq-data.js parses & has no reversed codes
-const faq = fs.readFileSync(path.join(ROOT, 'faq-data.js'), 'utf8');
-const FAQ_RAW = new Function(faq + '\nreturn FAQ_RAW;')();
-ok(Array.isArray(FAQ_RAW) && FAQ_RAW.length === 206, 'faq-data.js parses (' + FAQ_RAW.length + ' entries)');
-const joined = FAQ_RAW.join('|');
-ok(!/#\d[\d*]*\*|\*\s#|#\s\*/.test(joined), 'no reversed USSD patterns (e.g. *Number#)');
-const codes = [...new Set([...joined.matchAll(/\*\d{2,5}[\d*]*#/g)].map(m=>m[0]))];
-ok(codes.length >= 20, 'well-formed codes present (' + codes.length + ')');
-ok(!/\\\\n/.test(faq), 'no double-escaped \\n remnants');
+// 1. FAQ removed (section, data file, render code all gone)
+ok(!fs.existsSync(path.join(ROOT, 'faq-data.js')), 'faq-data.js deleted');
+ok(!/FAQ_RAW/.test(html) && !/renderFaq/.test(html) && !/statFaq/.test(html), 'no FAQ code left in index.html');
+ok(html.indexOf('data-tab="faq"') === -1 && html.indexOf('id="faq"') === -1, 'no FAQ tab/section in index.html');
+
+// 1b. Renewal countdown present
+ok(html.indexOf('data-tab="renew"') !== -1, 'Renewal tab present');
+ok(html.indexOf('id="renew"') !== -1, 'Renewal section present');
+ok(/id="renDate"/.test(html) && /id="renDay"/.test(html) && /id="renResult"/.test(html) && /id="renDays"/.test(html) && /id="renNext"/.test(html), 'Renewal inputs + outputs present');
+ok(/<option value="16">16th/.test(html), 'Renewal 1/4/16 day options present');
+ok(/function calcRenew/.test(html), 'calcRenew function present');
+
+// renewal math: days from picked date to next 1st/4th/16th (same-day = 0)
+function nextInvoice(y, m, d, day){
+  const ref = new Date(y, m, d);
+  let nxt = new Date(y, m, day);
+  if(nxt < ref) nxt = new Date(y, m + 1, day);
+  return Math.round((nxt - ref) / 86400000);
+}
+ok(nextInvoice(2026, 8, 25, 1) === 6, 'renew Sep 25 → Oct 1 = 6 days (got ' + nextInvoice(2026, 8, 25, 1) + ')');
+ok(nextInvoice(2026, 8, 25, 16) === 21, 'renew Sep 25 → Oct 16 = 21 days (got ' + nextInvoice(2026, 8, 25, 16) + ')');
+ok(nextInvoice(2026, 8, 1, 1) === 0, 'renew same-day (Sep 1, day 1) = 0 days (got ' + nextInvoice(2026, 8, 1, 1) + ')');
+ok(nextInvoice(2026, 11, 30, 4) === 5, 'renew Dec 30 → Jan 4 = 5 days (got ' + nextInvoice(2026, 11, 30, 4) + ')');
 
 // 2. live-data.js sets window.VF_LIVE
 const live = fs.readFileSync(path.join(ROOT, 'live-data.js'), 'utf8');
@@ -25,7 +40,6 @@ ok(w.VF_LIVE.data.plusBundles.length === 8, 'live-data.js has 8 Plus bundles');
 ok(w.VF_LIVE.data.codeChecks && w.VF_LIVE.data.codeChecks.cash.every(c => c.present), 'codeChecks all present');
 
 // 3. index.html wiring
-const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 ok(/<script src="live-data.js"/.test(html), 'index.html loads live-data.js');
 ok(/applyLive/.test(html), 'applyLive() overlay present');
 ok(/statSync/.test(html), 'sync status chip present');
