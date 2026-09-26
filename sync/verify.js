@@ -166,7 +166,7 @@ ok(html.indexOf('data-tab="offers"') !== -1, 'Offers tab present');
 ok(html.indexOf('id="offers"') !== -1, 'Offers section present');
 ok(/id="offPrice"/.test(html) && /id="offMonths"/.test(html) && /id="offDisc"/.test(html) && /id="offResult"/.test(html), 'Offers inputs + result present');
 ok(/id="offDeduct"/.test(html), 'Offers monthly deduction row present');
-ok(/<option value="50">50%/.test(html), 'Offers 25%/50% discount options present');
+ok(/<option value="20">20%/.test(html) && /<option value="25" selected>25%/.test(html) && /<option value="50">50%/.test(html), 'Offers 20%/25%/50% discount options present');
 ok(/function calcOffer/.test(html), 'calcOffer function present');
 ok(/for\(let m = 1; m <= 18; m\+\+\)/.test(html), 'Offers duration 1–18 months');
 
@@ -187,6 +187,8 @@ ok(o.monthly === 100 && o.total === 1800 && o.save === 1800, 'Offers 200 EGP × 
 ok(o.deduct === 100, 'Offers monthly deduction 200 × 50% = 100 (got ' + o.deduct + ')');
 o = offerMath(52, 50, 1);
 ok(o.monthly === 26 && o.total === 26 && o.save === 26, 'Offers 52 EGP × 1mo × 50%: 26/mo, 26 total, 26 save (got ' + o.monthly + '/' + o.total + '/' + o.save + ')');
+o = offerMath(100, 20, 12);
+ok(o.monthly === 80 && o.deduct === 20 && o.total === 960 && o.save === 240, 'Offers 100 EGP × 12mo × 20%: 80/mo, deduct 20, 960 total, 240 save (got ' + o.monthly + '/' + o.deduct + '/' + o.total + '/' + o.save + ')');
 
 console.log('\n' + (fails ? fails + ' FAILURES' : 'ALL CHECKS PASSED ✓'));
 process.exit(fails ? 1 : 0);
