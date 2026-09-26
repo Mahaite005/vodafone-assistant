@@ -190,5 +190,18 @@ ok(o.monthly === 26 && o.total === 26 && o.save === 26, 'Offers 52 EGP × 1mo ×
 o = offerMath(100, 20, 12);
 ok(o.monthly === 80 && o.deduct === 20 && o.total === 960 && o.save === 240, 'Offers 100 EGP × 12mo × 20%: 80/mo, deduct 20, 960 total, 240 save (got ' + o.monthly + '/' + o.deduct + '/' + o.total + '/' + o.save + ')');
 
+// 12. Plans subsections: icon badges + anchors + quick-jump chips + mobile polish
+const planSecs = ['sec-fakka','sec-flex','sec-plus','sec-red','sec-shokran','sec-short','sec-emg'];
+ok(planSecs.every(id => html.indexOf('id="' + id + '"') !== -1), 'all 7 Plans subsections have anchors');
+const ticoCount = (html.match(/<span class="tico">/g) || []).length;
+ok(ticoCount >= 7, 'icon badge on every Plans subsection (' + ticoCount + ')');
+const chipLinks = ['#sec-fakka','#sec-flex','#sec-plus','#sec-red','#sec-shokran','#sec-short','#sec-emg'];
+ok(chipLinks.every(h => html.indexOf('href="' + h + '"') !== -1), 'quick-jump chip for every Plans subsection');
+ok(/\.tico\{/.test(html) && /scroll-margin-top/.test(html) && /\.chips a\.chip/.test(html), 'badge/scroll-margin/chip-anchor CSS present');
+ok(/@media\(max-width:640px\)/.test(html), 'mobile media query present');
+const fakkaIcons = (html.match(/<b>🎫 Fakka /g) || []).length;
+ok(fakkaIcons === 4, 'Fakka rows carry ticket icon (' + fakkaIcons + '/4)');
+ok(/💳 Retail cards 5–30 EGP/.test(html), 'retail/recharge row carries card icon');
+
 console.log('\n' + (fails ? fails + ' FAILURES' : 'ALL CHECKS PASSED ✓'));
 process.exit(fails ? 1 : 0);

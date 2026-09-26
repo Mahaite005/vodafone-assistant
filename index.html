@@ -77,8 +77,16 @@ td{padding:.65rem .9rem; border-top:1px solid var(--line); vertical-align:top}
 td .ar{display:block; color:#565f6b; font-size:.92em; margin-top:.15rem; line-height:1.7}
 tr:hover td{background:#faf5f5}
 .tblwrap{overflow-x:auto; border-radius:14px; margin:.6rem 0 1.4rem}
-.tbl-title{font-weight:700; font-size:1.05rem; margin:1.4rem 0 .3rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
+.tbl-title{font-weight:700; font-size:1.05rem; margin:1.4rem 0 .3rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; scroll-margin-top:120px}
 .tbl-title .ar{font-weight:600; color:var(--muted); font-size:.95rem}
+.tico{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; background:#fff; border:1px solid var(--line); box-shadow:0 1px 3px rgba(0,0,0,.08); font-size:1.05rem; flex:none}
+.chips a.chip{text-decoration:none; display:inline-block; line-height:1.6}
+@media(max-width:640px){
+  .tbl-title{font-size:.98rem; margin-top:1.1rem}
+  .tico{width:28px; height:28px; font-size:.95rem}
+  th, td{padding:.55rem .6rem}
+  table{font-size:.85rem}
+}
 .note{font-size:.82rem; color:var(--muted); margin:.4rem 0; line-height:1.8}
 .note .ar{display:block}
 
@@ -223,20 +231,29 @@ footer .ar{display:block; color:#a8a29e}
 
 
 <section id="plans">
+  <div class="chips" id="planChips" style="margin-top:.4rem">
+    <a class="chip" href="#sec-fakka">🎫 Fakka <span class="ar">فكة</span></a>
+    <a class="chip" href="#sec-flex">🔀 Flex <span class="ar">فليكس</span></a>
+    <a class="chip" href="#sec-plus">🌐 Plus <span class="ar">بلس</span></a>
+    <a class="chip" href="#sec-red">🔴 RED <span class="ar">ريد</span></a>
+    <a class="chip" href="#sec-shokran">🤝 Shokran <span class="ar">شكراً</span></a>
+    <a class="chip" href="#sec-short">☎️ Numbers <span class="ar">أرقام</span></a>
+    <a class="chip" href="#sec-emg">🚨 Emergency <span class="ar">طوارئ</span></a>
+  </div>
 
-  <div class="tbl-title">💳 Prepaid Fakka Cards <span class="ar">كروت فكة — كارت الرصيد</span></div>
+  <div class="tbl-title" id="sec-fakka"><span class="tico">🎫</span>Prepaid Fakka Cards <span class="ar">كروت فكة — كارت الرصيد</span></div>
   <div class="note">Recharge units: <b>*858*[code]#</b> — control units: <b>*86#</b> — activate from balance: <b>*85#</b>
     <span class="ar">شحن الوحدات: <b>*858*[كود_الكارت]#</b> — التحكم في الوحدات: <b>*86#</b> — التفعيل من الرصيد: <b>*85#</b></span></div>
   <div class="tblwrap"><table>
     <tr><th>Card<br><span class="ar">الكارت</span></th><th>Minutes quota<br><span class="ar">الدقائق</span></th><th>Social MBs<br><span class="ar">ميجابايتس السوشيال</span></th></tr>
-    <tr><td><b>Fakka 2</b> <span class="ar">فكة ٢ جنيه</span><br><code>*9*200#</code></td><td>30 min — all networks<span class="ar">٣٠ دقيقة لكل الشبكات</span></td><td>60 MB<span class="ar">٦٠ ميجا</span></td></tr>
-    <tr><td><b>Fakka 4.25</b> <span class="ar">فكة ٤.٢٥ جنيه</span><br><code>*9*400#</code></td><td>190 min<span class="ar">١٩٠ دقيقة</span></td><td>380 MB<span class="ar">٣٨٠ ميجا</span></td></tr>
-    <tr><td><b>Fakka 6</b> <span class="ar">فكة ٦ جنيه</span><br><code>*9*600#</code></td><td>300 min<span class="ar">٣٠٠ دقيقة</span></td><td>600 MB<span class="ar">٦٠٠ ميجا</span></td></tr>
-    <tr><td><b>Fakka 8</b> <span class="ar">فكة ٨ جنيه</span><br><code>*9*800#</code></td><td>350 min<span class="ar">٣٥٠ دقيقة</span></td><td>700 MB<span class="ar">٧٠٠ ميجا</span></td></tr>
-    <tr><td>Retail cards 5–30 EGP<span class="ar">كروت الشحن من الفروع ٥–٣٠ جنيه</span></td><td colspan="2">Minutes + MBs per card value<span class="ar">دقائق وميجابايتس حسب قيمة الكارت — صالحة لنفس اليوم حتى منتصف الليل</span></td></tr>
+    <tr><td><b>🎫 Fakka 2</b> <span class="ar">فكة ٢ جنيه</span><br><code>*9*200#</code></td><td>30 min — all networks<span class="ar">٣٠ دقيقة لكل الشبكات</span></td><td>60 MB<span class="ar">٦٠ ميجا</span></td></tr>
+    <tr><td><b>🎫 Fakka 4.25</b> <span class="ar">فكة ٤.٢٥ جنيه</span><br><code>*9*400#</code></td><td>190 min<span class="ar">١٩٠ دقيقة</span></td><td>380 MB<span class="ar">٣٨٠ ميجا</span></td></tr>
+    <tr><td><b>🎫 Fakka 6</b> <span class="ar">فكة ٦ جنيه</span><br><code>*9*600#</code></td><td>300 min<span class="ar">٣٠٠ دقيقة</span></td><td>600 MB<span class="ar">٦٠٠ ميجا</span></td></tr>
+    <tr><td><b>🎫 Fakka 8</b> <span class="ar">فكة ٨ جنيه</span><br><code>*9*800#</code></td><td>350 min<span class="ar">٣٥٠ دقيقة</span></td><td>700 MB<span class="ar">٧٠٠ ميجا</span></td></tr>
+    <tr><td>💳 Retail cards 5–30 EGP<span class="ar">كروت الشحن من الفروع ٥–٣٠ جنيه</span></td><td colspan="2">Minutes + MBs per card value<span class="ar">دقائق وميجابايتس حسب قيمة الكارت — صالحة لنفس اليوم حتى منتصف الليل</span></td></tr>
   </table></div>
 
-  <div class="tbl-title">🔀 Flex Plans (Sep 2026) <span class="ar">باقات فليكس الجديدة</span></div>
+  <div class="tbl-title" id="sec-flex"><span class="tico">🔀</span>Flex Plans (Sep 2026) <span class="ar">باقات فليكس الجديدة</span></div>
   <div class="note">Subscribe / change / renew: <b>*880#</b> — renewal date: <b>*225#</b> — Flex Family: <b>*909#</b> — offers: <b>*365#</b>
     <span class="ar">الاشتراك / التغيير / التجديد: <b>*880#</b> — ميعاد التجديد: <b>*225#</b> — فليكس عيلة: <b>*909#</b> — العروض: <b>*365#</b> — الأسعار غير شاملة الضريبة</span></div>
   <div class="tblwrap"><table>
@@ -258,7 +275,7 @@ footer .ar{display:block; color:#a8a29e}
     <tr><td>Rollover conditions<span class="ar">ترحيل الفليكسات المتبقية</span></td><td>Only if renewed on time &amp; not downgrading<span class="ar">يتم الترحيل فقط عند التجديد في الموعد وعدم التحويل لباقة أصغر</span></td></tr>
   </table></div>
 
-  <div class="tbl-title">🌐 Plus Internet Bundles <span class="ar">باقات بلس للإنترنت</span></div>
+  <div class="tbl-title" id="sec-plus"><span class="tico">🌐</span>Plus Internet Bundles <span class="ar">باقات بلس للإنترنت</span></div>
   <div class="note">Subscribe: <b>*00#</b> or <b>*2000#</b> — YouTube <b>*00*1#</b> / TikTok <b>*00*2#</b> / Gaming <b>*00*3#</b> (6.5 EGP each)
     <span class="ar">الاشتراك: <b>*00#</b> أو <b>*2000#</b> — يوتيوب <b>*00*1#</b> / تيك توك <b>*00*2#</b> / الألعاب <b>*00*3#</b> (٦.٥ جنيه لكل باقة)</span></div>
   <div class="tblwrap"><table>
@@ -275,7 +292,7 @@ footer .ar{display:block; color:#a8a29e}
   <div class="note">Auto-renews every 28 days (prepaid) • rollover if renewed on time • not available for RED • Plus Apps: 450 MB prepaid / 1,000 MB Flex 25–55 / 2,000 MB Flex 60–100
     <span class="ar">تتجدد تلقائياً كل ٢٨ يوم (لكارت) • ترحيل المتبقي عند التجديد في الموعد • غير متاحة لعملاء ريد • باقات التطبيقات: ٤٥٠ ميجا لكارت / ١٠٠٠ ميجا لفليكس ٢٥–٥٥ / ٢٠٠٠ ميجا لفليكس ٦٠–١٠٠</span></div>
 
-  <div class="tbl-title">🔴 RED Postpaid (Sep 2026) <span class="ar">أنظمة ريد للفاتورة</span></div>
+  <div class="tbl-title" id="sec-red"><span class="tico">🔴</span>RED Postpaid (Sep 2026) <span class="ar">أنظمة ريد للفاتورة</span></div>
   <div class="note">Manage via Ana Vodafone app (More → My Plan) or call <b>888</b>. Prices tax-exclusive — use the Tax tab to compute the final bill.
     <span class="ar">الإدارة عبر تطبيق أنا فودافون (المزيد ← نظامي) أو بالاتصال بـ <b>888</b>. الأسعار غير شاملة الضريبة — استخدم تبويب حاسبة الضرائب لحساب الفاتورة النهائية.</span></div>
   <div class="tblwrap"><table>
@@ -289,7 +306,7 @@ footer .ar{display:block; color:#a8a29e}
   <div class="note">Overage after bundle: 19 pt/min, 30 pt/SMS • Subscriptions: Disney+, YouTube Premium, WATCH IT, OSN+, Anghami, Prime, Yango, TOD • Phone installments 15k–60k EGP (20% down) • RED family sharing via app
     <span class="ar">المحاسبة بعد الباقة: ١٩ قرش/دقيقة و٣٠ قرش/رسالة • الاشتراكات: ديزني+، يوتيوب بريميوم، واتش إت، OSN+، أنغامي، برايم، يانجو، TOD • تقسيط الموبايل ١٥–٦٠ ألف جنيه (مقدم ٢٠٪) • مشاركة العيلة من التطبيق</span></div>
 
-  <div class="tbl-title">🤝 Shokran Services <span class="ar">خدمات شكراً</span></div>
+  <div class="tbl-title" id="sec-shokran"><span class="tico">🤝</span>Shokran Services <span class="ar">خدمات شكراً</span></div>
   <div class="tblwrap"><table>
     <tr><th>Service<br><span class="ar">الخدمة</span></th><th>Code<br><span class="ar">الكود</span></th><th>Fee<br><span class="ar">الرسوم</span></th></tr>
     <tr><td>Sallefny — borrow credit<span class="ar">سلفني شكراً — استلف رصيد</span></td><td><code>*3#</code></td><td>1 EGP after recharge (get 3 EGP)<span class="ar">جنيه واحد بعد الشحن (تستلم ٣ جنيه)</span></td></tr>
@@ -303,7 +320,7 @@ footer .ar{display:block; color:#a8a29e}
     <tr><td>Track Shokran 2LE charges<span class="ar">متابعة رسوم خدمات شكراً (٢ جنيه)</span></td><td><code>*60*0#</code></td><td>Free<span class="ar">مجاناً</span></td></tr>
   </table></div>
 
-  <div class="tbl-title">☎️ Short &amp; Fun Numbers <span class="ar">الأرقام القصيرة والترفيهية</span></div>
+  <div class="tbl-title" id="sec-short"><span class="tico">☎️</span>Short &amp; Fun Numbers <span class="ar">الأرقام القصيرة والترفيهية</span></div>
   <div class="tblwrap"><table>
     <tr><th>Number<br><span class="ar">الرقم</span></th><th>Service<br><span class="ar">الخدمة</span></th><th>Price/min<br><span class="ar">السعر/دقيقة</span></th></tr>
     <tr><td><b>2121</b></td><td>Directory assistance — 7 languages, 24/7<span class="ar">خدمة الدليل — ٧ لغات على مدار الساعة</span></td><td>1.5 LE<span class="ar">١.٥ جنيه</span></td></tr>
@@ -331,7 +348,7 @@ footer .ar{display:block; color:#a8a29e}
     <tr><td>19019</td><td>KFC<span class="ar">كنتاكي</span></td><td>landline<span class="ar">بسعر الأرضي</span></td></tr>
   </table></div>
 
-  <div class="tbl-title">🚨 Emergency &amp; Official <span class="ar">الطوارئ والأرقام الرسمية</span></div>
+  <div class="tbl-title" id="sec-emg"><span class="tico">🚨</span>Emergency &amp; Official <span class="ar">الطوارئ والأرقام الرسمية</span></div>
   <div class="tblwrap"><table>
     <tr><th>Number<br><span class="ar">الرقم</span></th><th>Service<br><span class="ar">الخدمة</span></th></tr>
     <tr><td><b>122</b></td><td>Police<span class="ar">الشرطة</span></td></tr>
